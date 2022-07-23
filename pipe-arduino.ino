@@ -2,18 +2,34 @@
 #include <WiFi.h>
 #include <Fetch.h>
 
+// https://www.norwegiancreations.com/2017/09/arduino-tutorial-using-millis-instead-of-delay/
+
 // HTTP REQUEST
-#define URL "https://rickandmortyapi.com"
+#define URL "https://pipe-server.herokuapp.com"
 #define PORT 443 // HTTPS port
-#define PATH "/api"
+#define PATH "/pipe"
+
 #define METHOD "GET"
 #define CONTENTTYPE "application/json"
 #define BODY "{\"email\": \"test@test.com\", \"password\": \"test:80\"}"
 #define FINGERPRINT "DC 78 3C 09 3A 78 E3 A0 BA A9 C5 4F 7A A0 87 6F 89 01 71 4C"
 
-
 const char* ssid = "iPhone de ete sech";
 const char* password = "memedona";
+
+class ResponseOptions {
+    String method;
+    Headers headers;
+    String body;
+    int follow;
+};
+
+ResponseOptions options;
+options.method = "GET";
+options.headers["Content-Type"] = "application/json";
+options.headers["Connection"] = "keep-alive";
+options.headers["password"] = "3124315814";
+options.body = "{\"email\":\"EMAIL\", \"password\"=\"PASSWORD\"}";
 
 void initWifi() {
   WiFi.mode(WIFI_STA);
@@ -25,20 +41,6 @@ void initWifi() {
   }
   Serial.println(WiFi.localIP());
 }
-
-// RequestOptions
-class RequestOptions {
-    private:
-    public:
-        String method;
-        Headers headers;
-        Body body;
-        #if defined(ESP8266)
-        String fingerprint;
-        #endif
-        String caCert;
-        RequestOptions();
-};
 
 // Pipe
 class Pipe
@@ -59,6 +61,12 @@ public:
     }
 
     void activatePump() {}
+
+    void checkServer() {
+      options.method = "GET";
+      Response response = fetch(URL, options);
+      
+    }
 
 private:
     // VARIABLE FUNCTIONS
@@ -90,13 +98,7 @@ void setup()
     Serial.begin(9600);
     initWifi();
     Serial.println("Setup complete.\n");
-
-    ResponseOptions options;
-    options.method = "GET";
-    options.headers["Content-Type"] = "application/json";
-    options.headers["Connection"] = "keep-alive";
-    options.body = "email=EMAIL&password=PASSWORD";
-    Response response = fetch("https://rickandmortyapi.com/api", options);
+    Response response = fetch(URL, options);
     Serial.println(response);
 }
 
