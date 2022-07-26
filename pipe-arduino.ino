@@ -1,14 +1,12 @@
 // Libraries:
 #include <SPI.h>
 #include <WiFi.h>
+#include <HTTPClient.h>
 
 // Variables:
 #define VERSION "1.0.3"
 
-//#define URL "https://pipe-server.herokuapp.com"
-//#define PATH "/v1/pipe"
-const char URL[] = "https://rickandmortyapi.com";
-const char PATH[] = "/api";
+char URL[] = "https://pipe-server.herokuapp.com/v1/pipe";
 #define PORT 80 // HTTPS port
 #define API_PASSWORD "3124315814" // Api
 
@@ -109,67 +107,45 @@ void initWifi()
 }
 
 // Request
-void setHeaders(WiFiClient client, String httpMethod)
+void getPipe()
 {
-  Serial.println("F/setHeaders: Setting Headers");
-  client.println(httpMethod + " " + String(PATH) + " HTTP/1.1");
-  client.println("Host: " + String(URL));
-  client.println("Content-Type: application/json");
-  client.println("password: " + String(API_PASSWORD));
-  client.println("Connection: keep-alive");
-  client.println(); // end Header
-}
-
-void getPipe(WiFiClient client)
-{
-//  if(client.connect(URL, PORT)) {
-  if(true) {
-    Serial.println(client.connect(URL, PORT));
-    Serial.println("F/getPipe: Connected to server: Setting Headers");
-    setHeaders(client, "GET");
-    Serial.println("F/getPipe: Connected to server: Setted Headers");
-    Serial.println(client.available());
-    while(client.available()) {
-      Serial.print(client.read());
-//      if(client.available()){
-//        Serial.print(",");
-//        Serial.print(client.read());
-//      }
-    }
-
-    client.stop();
-    Serial.println("\nF/getPipe: Disconnected from server");
+  Serial.println("F/getPipe: Started");
+  HTTPClient http;
+  http.begin(URL);
+  http.addHeader("Content-Type", "application/json");
+  http.addHeader("password", API_PASSWORD);
+  int httpCode = http.GET(); 
+  if (httpCode > 0) {
+    String payload = http.getString();
+    Serial.println("F/getPipe: payload: " + payload);
+    
   } else {
-    Serial.println("F/getPipe: Can't connect to server");
+    Serial.println("F/getPipe: Error in http request");
   }
+  http.end();
 }
 
-void postPipe(WiFiClient client, Pipe pipe)
+void postPipe(Pipe pipe)
 {
+  Serial.println("F/postPipe: Started");
   char rawBody[] = "{\"humidity\": \"%d\", \"temperature\": \"%d\", \"light\": \"%d\", \"isBulbOn\": \"%d\", \"isPumpOn\": \"%d\"}";
   char bodyBuffer[100];
   sprintf(bodyBuffer, rawBody, pipe.humidity, pipe.temperature, pipe.light, pipe.isBulbOn, pipe.isPumpOn);
-
-  if(client.connect(URL, PORT)) {
-    Serial.println("F/getPipe: Connecting to server: Setting Headers");
-    setHeaders(client, "POST");
-    Serial.println("F/getPipe: Connecting to server: Setted Headers");
-
-    client.println(bodyBuffer);
-
-    while(client.connected()) {
-      if(client.available()){
-        // GSAGSAGHASDHSA
-        char c = client.read();
-        Serial.print(c);
-      }
-    }
+  Serial.println("F/postPipe: Body: " + String(bodyBuffer));
+  
+  HTTPClient http;
+  http.begin(URL);
+  http.addHeader("Content-Type", "application/json");
+  http.addHeader("password", API_PASSWORD);
+  int httpCode = http.POST(bodyBuffer); 
+  if (httpCode > 0) {
+    String payload = http.getString();
+    Serial.println("F/postPipe: payload: " + payload);
     
-    client.stop();
-    Serial.println("\nF/getPipe: Disconnected from server");
   } else {
-    Serial.println("F/getPipe: Can't connect to server");
+    Serial.println("F/postPipe: Error in http request");
   }
+  http.end();
 }
 
 void setup()
@@ -178,11 +154,11 @@ void setup()
   Serial.print("\nF/setup: Started version ");
   Serial.println(VERSION);
 
-  Pipe pipe();
+  Pipe pipe = Pipe();
   initWifi();
-  
-  WiFiClient wifiClient;
-  getPipe(wifiClient);
+
+  postPipe(pipe);
+  getPipe();
 }
 
 void loop()
