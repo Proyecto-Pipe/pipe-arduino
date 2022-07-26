@@ -2,16 +2,16 @@
 #include <SPI.h>
 #include <WiFi.h>
 #include <HTTPClient.h>
+#include <ArduinoJson.h>
 
 // Variables:
 #define VERSION "1.0.3"
 
+#define PUMP_DURATION 6000
+
 char URL[] = "https://pipe-server.herokuapp.com/v1/pipe";
 #define PORT 80 // HTTPS port
 #define API_PASSWORD "3124315814" // Api
-
-#define CONTENTTYPE "application/json"
-#define FINGERPRINT "DC 78 3C 09 3A 78 E3 A0 BA A9 C5 4F 7A A0 87 6F 89 01 71 4C"
 
 #define WIFI_SSID "iPhone de ete sech"
 #define WIFI_PASSWORD "memedona"
@@ -42,27 +42,28 @@ public:
   {
     Serial.println("C/Pipe: onBulb");
     isBulbOn = true;
+    _onBulb();
   }
   void offBulb()
   {
     Serial.println("C/Pipe: offBulb");
     isBulbOn = false;
+    _offBulb();
   }
-  void onPump()
+  void activatePump()
   {
-    Serial.println("C/Pipe: onPump");
+    Serial.println("C/Pipe: activatePump");
     isPumpOn = true;
-  }
-  void offPump()
-  {
-    Serial.println("C/Pipe: offPump");
+    _onPump();
+    delay(PUMP_DURATION);
+    _offPump();
     isPumpOn = false;
   }
 
 private:
   void updatePipe()
   {
-    Serial.println("C/Pipe: updatePipe");
+    Serial.println("C/Pipe: private: updatePipe");
     humidity = getCurrentHumidity();
     temperature = getCurrentTemperature();
     light = getCurrentLight();
@@ -81,6 +82,22 @@ private:
   int getCurrentLight()
   {
     return 0;
+  }
+
+  void _onBulb() {
+    
+  }
+
+  void _offBulb() {
+    
+  }
+
+  void _onPump() {
+    
+  }
+
+  void _offPump() {
+    
   }
 };
 
@@ -107,7 +124,7 @@ void initWifi()
 }
 
 // Request
-void getPipe()
+void getPipe(Pipe pipe)
 {
   Serial.println("F/getPipe: Started");
   HTTPClient http;
@@ -119,6 +136,23 @@ void getPipe()
     String payload = http.getString();
     Serial.println("F/getPipe: payload: " + payload);
     
+    DynamicJsonDocument jsonRes(1024);
+    deserializeJson(jsonRes, payload);
+    const int lastPipeConnection = jsonRes["lastPipeConnection"];
+    const bool isBulbOn = jsonRes["isBulbOn"];
+    const bool isPumpOn = jsonRes["isPumpOn"];
+    Serial.println("F/getPipe: Last Pipe connection: " + lastPipeConnection);
+    Serial.println("F/getPipe: isBulbOn: " + isBulbOn);
+    Serial.println("F/getPipe: isPumpOn: " + isPumpOn);
+    
+    if (isBulbOn) {
+      pipe.onBulb();
+    } else { 
+      pipe.offBulb();
+    }
+    if (isPumpOn) {
+      pipe.activatePump();
+    }
   } else {
     Serial.println("F/getPipe: Error in http request");
   }
@@ -141,7 +175,6 @@ void postPipe(Pipe pipe)
   if (httpCode > 0) {
     String payload = http.getString();
     Serial.println("F/postPipe: payload: " + payload);
-    
   } else {
     Serial.println("F/postPipe: Error in http request");
   }
@@ -151,14 +184,14 @@ void postPipe(Pipe pipe)
 void setup()
 {
   Serial.begin(9600);
-  Serial.print("\nF/setup: Started version ");
+  Serial.print("\n\n\n\nF/setup: Started version ");
   Serial.println(VERSION);
 
   Pipe pipe = Pipe();
   initWifi();
 
   postPipe(pipe);
-  getPipe();
+  getPipe(pipe);
 }
 
 void loop()
