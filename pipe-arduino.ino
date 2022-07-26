@@ -1,25 +1,25 @@
 // Libraries:
 #include <SPI.h>
 #include <WiFi.h>
-#include <Fetch.h>
 
 // Variables:
-#define VERSION "1.0.2"
+#define VERSION "1.0.3"
 
-#define URL "https://pipe-server.herokuapp.com"
-#define PORT 443 // HTTPS port
-#define PATH "/v1/pipe"
+//#define URL "https://pipe-server.herokuapp.com"
+//#define PATH "/v1/pipe"
+const char URL[] = "https://rickandmortyapi.com";
+const char PATH[] = "/api";
+#define PORT 80 // HTTPS port
 #define API_PASSWORD "3124315814" // Api
 
 #define CONTENTTYPE "application/json"
-#define BODY "{\"email\": \"test@test.com\", \"password\": \"test:80\"}"
 #define FINGERPRINT "DC 78 3C 09 3A 78 E3 A0 BA A9 C5 4F 7A A0 87 6F 89 01 71 4C"
 
 #define WIFI_SSID "iPhone de ete sech"
 #define WIFI_PASSWORD "memedona"
 
 // Millis()
-int period = 10000;
+const int period = 10000;
 unsigned long time_now = 0;
 
 // Pipe
@@ -90,72 +90,104 @@ private:
 const char *ssid = WIFI_SSID;
 const char *password = WIFI_PASSWORD;
 
+IPAddress ip;
+
 void initWifi()
 {
   Serial.println("F/initWifi: Started");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  Serial.print("Connecting to WiFi ..");
+  Serial.print("F/initWifi: Connecting to WiFi ..");
   while (WiFi.status() != WL_CONNECTED)
   {
     Serial.print('.');
     delay(1000);
   }
-  Serial.print("F/initWifi: Connected to wifi: ");
-  Serial.print(WiFi.localIP() + "\n");
+  Serial.print("\nF/initWifi: Connected to wifi: ");
+  ip = WiFi.localIP();
+  Serial.println(ip);
 }
 
-// Wifi options
-RequestOptions getGetOptions()
+// Request
+void setHeaders(WiFiClient client, String httpMethod)
 {
-  Serial.println("F/getGetOptions: Started()");
-  RequestOptions options;
-  options.method = "GET";
-  options.headers["Content-Type"] = "application/json";
-  options.headers["Connection"] = "keep-alive";
-  options.headers["password"] = API_PASSWORD;
-  return options;
+  Serial.println("F/setHeaders: Setting Headers");
+  client.println(httpMethod + " " + String(PATH) + " HTTP/1.1");
+  client.println("Host: " + String(URL));
+  client.println("Content-Type: application/json");
+  client.println("password: " + String(API_PASSWORD));
+  client.println("Connection: keep-alive");
+  client.println(); // end Header
 }
 
-RequestOptions getPostOptions(Pipe pipe)
+void getPipe(WiFiClient client)
 {
-  Serial.println("F/getPostOptions: Started()");
-  RequestOptions options;
-  options.method = "POST";
-  options.headers["Content-Type"] = "application/json";
-  options.headers["Connection"] = "keep-alive";
-  options.headers["password"] = API_PASSWORD;
+//  if(client.connect(URL, PORT)) {
+  if(true) {
+    Serial.println(client.connect(URL, PORT));
+    Serial.println("F/getPipe: Connected to server: Setting Headers");
+    setHeaders(client, "GET");
+    Serial.println("F/getPipe: Connected to server: Setted Headers");
+    Serial.println(client.available());
+    while(client.available()) {
+      Serial.print(client.read());
+//      if(client.available()){
+//        Serial.print(",");
+//        Serial.print(client.read());
+//      }
+    }
+
+    client.stop();
+    Serial.println("\nF/getPipe: Disconnected from server");
+  } else {
+    Serial.println("F/getPipe: Can't connect to server");
+  }
+}
+
+void postPipe(WiFiClient client, Pipe pipe)
+{
   char rawBody[] = "{\"humidity\": \"%d\", \"temperature\": \"%d\", \"light\": \"%d\", \"isBulbOn\": \"%d\", \"isPumpOn\": \"%d\"}";
-//  String body = "{\"humidity\": \"" + pipe.humidity + "\"" +
-//                 ",\"temperature\": \"" + pipe.temperature + "\"" +
-//                 ",\"light\": \"" + pipe.light + "\"" +
-//                 ",\"isBulbOn\": \"" + pipe.isBulbOn + "\"" +
-//                 ",\"isPumpOn\": \"" + pipe.isPumpOn + "\"" +
-//                 "}";
-//  body.toCharArray(bodyBuffer, 100);
   char bodyBuffer[100];
   sprintf(bodyBuffer, rawBody, pipe.humidity, pipe.temperature, pipe.light, pipe.isBulbOn, pipe.isPumpOn);
-  options.body = bodyBuffer;
-  Serial.println("F/getPostOptions: options.body: " + options.body);
-  return options;
+
+  if(client.connect(URL, PORT)) {
+    Serial.println("F/getPipe: Connecting to server: Setting Headers");
+    setHeaders(client, "POST");
+    Serial.println("F/getPipe: Connecting to server: Setted Headers");
+
+    client.println(bodyBuffer);
+
+    while(client.connected()) {
+      if(client.available()){
+        // GSAGSAGHASDHSA
+        char c = client.read();
+        Serial.print(c);
+      }
+    }
+    
+    client.stop();
+    Serial.println("\nF/getPipe: Disconnected from server");
+  } else {
+    Serial.println("F/getPipe: Can't connect to server");
+  }
 }
 
 void setup()
 {
-  Pipe pipe();
   Serial.begin(9600);
-  initWifi();
   Serial.print("\nF/setup: Started version ");
   Serial.println(VERSION);
-  Response response = fetch(URL, getGetOptions());
-  Serial.println(response);
+
+  Pipe pipe();
+  initWifi();
+  
+  WiFiClient wifiClient;
+  getPipe(wifiClient);
 }
 
 void loop()
 {
   time_now = millis();
-  while (millis() < time_now + period)
-  {
-    Serial.println("F/loop: New period");
-  }
+  while (millis() < time_now + period);
+  Serial.println("F/loop: New period");
 }
