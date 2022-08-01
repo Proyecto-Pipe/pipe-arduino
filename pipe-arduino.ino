@@ -4,8 +4,15 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
+#include "DHT.h"
+
 // Variables:
 #define VERSION "1.0.3"
+
+#define FLASH_GPIO_NUM 4
+
+#define DHTPIN 12
+#define DHTTYPE DHT11
 
 #define PUMP_DURATION 6000
 
@@ -20,44 +27,56 @@ char URL[] = "https://pipe-server.herokuapp.com/v1/pipe";
 const int period = 10000;
 unsigned long time_now = 0;
 
+// Others
+DHT dht(DHTPIN, DHTTYPE);
+
+// Flash
+void flash(int time, int times) {
+  for (int i = 0; i < times; i++) {
+    digitalWrite(FLASH_GPIO_NUM, HIGH);
+    delay(time);
+    digitalWrite(FLASH_GPIO_NUM, LOW);  
+  }
+};
+
 // Pipe
 class Pipe
 {
 public:
-  int humidity;
-  int temperature;
+  float humidity;
+  float temperature;
   int light;
-  bool isBulbOn;
-  bool isPumpOn;
+  int isBulbOn;
+  int isPumpOn;
 
   Pipe()
   {
     Serial.println("C/Pipe: Started");
     updatePipe();
-    isBulbOn = false;
-    isPumpOn = false;
+    isBulbOn = 0;
+    isPumpOn = 0;
   }
 
   void onBulb()
   {
     Serial.println("C/Pipe: onBulb");
-    isBulbOn = true;
+    isBulbOn = 1;
     _onBulb();
   }
   void offBulb()
   {
     Serial.println("C/Pipe: offBulb");
-    isBulbOn = false;
+    isBulbOn = 0;
     _offBulb();
   }
   void activatePump()
   {
     Serial.println("C/Pipe: activatePump");
-    isPumpOn = true;
+    isPumpOn = 1;
     _onPump();
     delay(PUMP_DURATION);
     _offPump();
-    isPumpOn = false;
+    isPumpOn = 0;
   }
 
 private:
@@ -69,19 +88,23 @@ private:
     light = getCurrentLight();
   }
 
-  int getCurrentHumidity()
+  float getCurrentHumidity()
   {
-    return 0;
+    return dht.readHumidity();
   }
 
-  int getCurrentTemperature()
+  float getCurrentTemperature()
   {
-    return 0;
+    return dht.readTemperature();
   }
 
   int getCurrentLight()
   {
     return 0;
+  }
+
+  void _setUpLight() {
+    
   }
 
   void _onBulb() {
@@ -92,11 +115,19 @@ private:
     
   }
 
+  void _setUpBulb() {
+    
+  }
+
   void _onPump() {
     
   }
 
   void _offPump() {
+    
+  }
+
+  void _setUpPump() {
     
   }
 };
@@ -121,11 +152,12 @@ void initWifi()
   Serial.print("\nF/initWifi: Connected to wifi: ");
   ip = WiFi.localIP();
   Serial.println(ip);
-}
+};
 
 // Request
 void getPipe(Pipe pipe)
 {
+  flash(300, 2);
   Serial.println("F/getPipe: Started");
   HTTPClient http;
   http.begin(URL);
@@ -141,10 +173,14 @@ void getPipe(Pipe pipe)
     const int lastPipeConnection = jsonRes["lastPipeConnection"];
     const bool isBulbOn = jsonRes["isBulbOn"];
     const bool isPumpOn = jsonRes["isPumpOn"];
-    Serial.println("F/getPipe: Last Pipe connection: " + lastPipeConnection);
-    Serial.println("F/getPipe: isBulbOn: " + isBulbOn);
-    Serial.println("F/getPipe: isPumpOn: " + isPumpOn);
-    
+//    Serial.println("F/getPipe: Last Pipe connection: " + lastPipeConnection);
+//    Serial.println("F/getPipe: isBulbOn: " + isBulbOn);
+//    Serial.println("F/getPipe: isPumpOn: " + isPumpOn);
+
+    Serial.println(lastPipeConnection);
+    Serial.println(isBulbOn);
+    Serial.println(isPumpOn);
+  
     if (isBulbOn) {
       pipe.onBulb();
     } else { 
@@ -154,6 +190,7 @@ void getPipe(Pipe pipe)
       pipe.activatePump();
     }
   } else {
+    flash(100, 5);
     Serial.println("F/getPipe: Error in http request");
   }
   http.end();
@@ -161,7 +198,9 @@ void getPipe(Pipe pipe)
 
 void postPipe(Pipe pipe)
 {
+  flash(300, 2);
   Serial.println("F/postPipe: Started");
+  Serial.println(pipe.isPumpOn);
   char rawBody[] = "{\"humidity\": \"%d\", \"temperature\": \"%d\", \"light\": \"%d\", \"isBulbOn\": \"%d\", \"isPumpOn\": \"%d\"}";
   char bodyBuffer[100];
   sprintf(bodyBuffer, rawBody, pipe.humidity, pipe.temperature, pipe.light, pipe.isBulbOn, pipe.isPumpOn);
@@ -176,6 +215,7 @@ void postPipe(Pipe pipe)
     String payload = http.getString();
     Serial.println("F/postPipe: payload: " + payload);
   } else {
+    flash(100, 5);
     Serial.println("F/postPipe: Error in http request");
   }
   http.end();
@@ -186,6 +226,13 @@ void setup()
   Serial.begin(9600);
   Serial.print("\n\n\n\nF/setup: Started version ");
   Serial.println(VERSION);
+
+  // Flash:
+  pinMode(FLASH_GPIO_NUM, OUTPUT);
+  flash(1000, 1);
+
+  // Humidity:
+  dht.begin();
 
   Pipe pipe = Pipe();
   initWifi();
