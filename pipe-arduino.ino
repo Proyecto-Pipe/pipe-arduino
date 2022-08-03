@@ -16,8 +16,8 @@
 
 #define PUMP_DURATION 6000
 
-//char URL[] = "https://pipe-server.herokuapp.com/v1/pipe";
-char URL[] = "https://rickandmortyapi.com/api";
+char URL[] = "https://pipe-server.herokuapp.com/v1/pipe";
+// char URL[] = "https://rickandmortyapi.com/api";
 #define PORT 80 // HTTPS port
 #define API_PASSWORD "3124315814" // Api
 
@@ -55,7 +55,7 @@ public:
     Serial.println("C/Pipe: Started");
     updatePipe();
     isBulbOn = 0;
-    isPumpOn = 20;
+    isPumpOn = 0;
   }
 
   void onBulb()
@@ -174,9 +174,9 @@ void getPipe()
     
     DynamicJsonDocument jsonRes(1024);
     deserializeJson(jsonRes, payload);
-    const int lastPipeConnection = jsonRes["lastPipeConnection"];
-    const bool isBulbOn = jsonRes["isBulbOn"];
-    const bool isPumpOn = jsonRes["isPumpOn"];
+    const int lastPipeConnection = int(jsonRes["lastPipeConnection"]);
+    const int isBulbOn = int(jsonRes["isBulbOn"]);
+    const int isPumpOn = int(jsonRes["isPumpOn"]);
 //    Serial.println("F/getPipe: Last Pipe connection: " + lastPipeConnection);
 //    Serial.println("F/getPipe: isBulbOn: " + isBulbOn);
 //    Serial.println("F/getPipe: isPumpOn: " + isPumpOn);
@@ -185,12 +185,12 @@ void getPipe()
     Serial.println(isBulbOn);
     Serial.println(isPumpOn);
   
-    if (isBulbOn) {
+    if (isBulbOn == 1) {
       pipe1.onBulb();
     } else { 
       pipe1.offBulb();
     }
-    if (isPumpOn) {
+    if (isPumpOn == 1) {
       pipe1.activatePump();
     }
   } else {
@@ -248,7 +248,7 @@ void setup()
   pipe1 = Pipe1();
   initWifi();
 
-  // postPipe();
+  postPipe();
   getPipe();
 }
 
@@ -257,4 +257,6 @@ void loop()
   time_now = millis();
   while (millis() < time_now + period);
   Serial.println("F/loop: New period");
+  getPipe();
+  postPipe();
 }
