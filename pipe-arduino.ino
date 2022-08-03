@@ -16,7 +16,8 @@
 
 #define PUMP_DURATION 6000
 
-char URL[] = "https://pipe-server.herokuapp.com/v1/pipe";
+//char URL[] = "https://pipe-server.herokuapp.com/v1/pipe";
+char URL[] = "https://rickandmortyapi.com/api";
 #define PORT 80 // HTTPS port
 #define API_PASSWORD "3124315814" // Api
 
@@ -28,33 +29,33 @@ const int period = 10000;
 unsigned long time_now = 0;
 
 // Others
-DHT dht(DHTPIN, DHTTYPE);
-
-// Flash
 void flash(int time, int times) {
   for (int i = 0; i < times; i++) {
     digitalWrite(FLASH_GPIO_NUM, HIGH);
     delay(time);
-    digitalWrite(FLASH_GPIO_NUM, LOW);  
+    digitalWrite(FLASH_GPIO_NUM, LOW);
+    delay(time); 
   }
 };
 
+DHT dht(DHTPIN, DHTTYPE);
+
 // Pipe
-class Pipe
+class Pipe1
 {
 public:
   float humidity;
   float temperature;
-  int light;
+  float light;
   int isBulbOn;
   int isPumpOn;
 
-  Pipe()
+  Pipe1()
   {
     Serial.println("C/Pipe: Started");
     updatePipe();
     isBulbOn = 0;
-    isPumpOn = 0;
+    isPumpOn = 20;
   }
 
   void onBulb()
@@ -98,9 +99,9 @@ private:
     return dht.readTemperature();
   }
 
-  int getCurrentLight()
+  float getCurrentLight()
   {
-    return 0;
+    return 13.0;
   }
 
   void _setUpLight() {
@@ -132,6 +133,8 @@ private:
   }
 };
 
+Pipe1 pipe1;
+
 // Wifi
 const char *ssid = WIFI_SSID;
 const char *password = WIFI_PASSWORD;
@@ -152,10 +155,10 @@ void initWifi()
   Serial.print("\nF/initWifi: Connected to wifi: ");
   ip = WiFi.localIP();
   Serial.println(ip);
-};
+}
 
 // Request
-void getPipe(Pipe pipe)
+void getPipe()
 {
   flash(300, 2);
   Serial.println("F/getPipe: Started");
@@ -164,7 +167,8 @@ void getPipe(Pipe pipe)
   http.addHeader("Content-Type", "application/json");
   http.addHeader("password", API_PASSWORD);
   int httpCode = http.GET(); 
-  if (httpCode > 0) {
+  // if (httpCode > 0) {
+  if (true) {
     String payload = http.getString();
     Serial.println("F/getPipe: payload: " + payload);
     
@@ -182,30 +186,36 @@ void getPipe(Pipe pipe)
     Serial.println(isPumpOn);
   
     if (isBulbOn) {
-      pipe.onBulb();
+      pipe1.onBulb();
     } else { 
-      pipe.offBulb();
+      pipe1.offBulb();
     }
     if (isPumpOn) {
-      pipe.activatePump();
+      pipe1.activatePump();
     }
   } else {
     flash(100, 5);
     Serial.println("F/getPipe: Error in http request");
+    Serial.println(httpCode);
   }
   http.end();
 }
 
-void postPipe(Pipe pipe)
+void postPipe()
 {
   flash(300, 2);
   Serial.println("F/postPipe: Started");
-  Serial.println(pipe.isPumpOn);
-  char rawBody[] = "{\"humidity\": \"%d\", \"temperature\": \"%d\", \"light\": \"%d\", \"isBulbOn\": \"%d\", \"isPumpOn\": \"%d\"}";
-  char bodyBuffer[100];
-  sprintf(bodyBuffer, rawBody, pipe.humidity, pipe.temperature, pipe.light, pipe.isBulbOn, pipe.isPumpOn);
-  Serial.println("F/postPipe: Body: " + String(bodyBuffer));
-  
+  Serial.println(pipe1.isPumpOn);
+  Serial.println(pipe1.light);
+  Serial.println(pipe1.humidity);
+
+  char bodyBuffer[1024];
+  char rawBody[] = "{\"humidity\": \"%f\", \"temperature\": \"%f\", \"light\": \"%f\", \"isBulbOn\": \"%d\", \"isPumpOn\": \"%d\"}";
+  sprintf(bodyBuffer, rawBody, float(pipe1.humidity), float(pipe1.temperature), float(pipe1.light), int(pipe1.isBulbOn), int(pipe1.isPumpOn));
+  Serial.println("F/postPipe: Body:");
+  Serial.println(bodyBuffer);
+
+
   HTTPClient http;
   http.begin(URL);
   http.addHeader("Content-Type", "application/json");
@@ -217,6 +227,7 @@ void postPipe(Pipe pipe)
   } else {
     flash(100, 5);
     Serial.println("F/postPipe: Error in http request");
+    Serial.println(httpCode);
   }
   http.end();
 }
@@ -234,11 +245,11 @@ void setup()
   // Humidity:
   dht.begin();
 
-  Pipe pipe = Pipe();
+  pipe1 = Pipe1();
   initWifi();
 
-  postPipe(pipe);
-  getPipe(pipe);
+  // postPipe();
+  getPipe();
 }
 
 void loop()
