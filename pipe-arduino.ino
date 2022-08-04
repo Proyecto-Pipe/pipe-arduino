@@ -6,15 +6,20 @@
 
 #include "DHT.h"
 
-// Variables:
+// Variables: =================
 #define VERSION "1.0.3"
 
 #define FLASH_GPIO_NUM 4
 
-#define DHTPIN 12
-#define DHTTYPE DHT11
+#define DHT_PIN 12
+#define DHT_TYPE DHT11
 
-#define PUMP_DURATION 6000
+#define BULB_PIN 15
+
+#define PUMP_RELAY_PIN 13
+#define PUMP_DURATION 2000
+
+#define BUFFER_SIZE 174
 
 char URL[] = "https://pipe-server.herokuapp.com/v1/pipe";
 // char URL[] = "https://rickandmortyapi.com/api";
@@ -38,7 +43,7 @@ void flash(int time, int times) {
   }
 };
 
-DHT dht(DHTPIN, DHTTYPE);
+DHT dht(DHT_PIN, DHT_TYPE);
 
 // Pipe
 class Pipe1
@@ -53,6 +58,7 @@ public:
   Pipe1()
   {
     Serial.println("C/Pipe: Started");
+    setUpPipe();
     updatePipe();
     isBulbOn = 0;
     isPumpOn = 0;
@@ -89,6 +95,10 @@ private:
     light = getCurrentLight();
   }
 
+  void setUpPipe() {
+    _setUpBulb();
+  }
+
   float getCurrentHumidity()
   {
     return dht.readHumidity();
@@ -104,32 +114,24 @@ private:
     return 13.0;
   }
 
-  void _setUpLight() {
-    
+  void _setUpBulb() {
+    digitalWrite(BULB_PIN, LOW);
   }
 
   void _onBulb() {
-    
+    digitalWrite(BULB_PIN, HIGH);
   }
 
   void _offBulb() {
-    
-  }
-
-  void _setUpBulb() {
-    
+    digitalWrite(BULB_PIN, LOW);    
   }
 
   void _onPump() {
-    
+    digitalWrite(PUMP_RELAY_PIN, HIGH);
   }
 
   void _offPump() {
-    
-  }
-
-  void _setUpPump() {
-    
+    digitalWrite(PUMP_RELAY_PIN, LOW);    
   }
 };
 
@@ -172,7 +174,7 @@ void getPipe()
     String payload = http.getString();
     Serial.println("F/getPipe: payload: " + payload);
     
-    DynamicJsonDocument jsonRes(1024);
+    DynamicJsonDocument jsonRes(BUFFER_SIZE);
     deserializeJson(jsonRes, payload);
     const int lastPipeConnection = int(jsonRes["lastPipeConnection"]);
     const int isBulbOn = int(jsonRes["isBulbOn"]);
@@ -209,7 +211,7 @@ void postPipe()
   Serial.println(pipe1.light);
   Serial.println(pipe1.humidity);
 
-  char bodyBuffer[1024];
+  char bodyBuffer[BUFFER_SIZE];
   char rawBody[] = "{\"humidity\": \"%f\", \"temperature\": \"%f\", \"light\": \"%f\", \"isBulbOn\": \"%d\", \"isPumpOn\": \"%d\"}";
   sprintf(bodyBuffer, rawBody, float(pipe1.humidity), float(pipe1.temperature), float(pipe1.light), int(pipe1.isBulbOn), int(pipe1.isPumpOn));
   Serial.println("F/postPipe: Body:");
@@ -240,23 +242,33 @@ void setup()
 
   // Flash:
   pinMode(FLASH_GPIO_NUM, OUTPUT);
-  flash(1000, 1);
+  flash(300, 3);
 
   // Humidity:
   dht.begin();
 
+  // Pump
+  pinMode(PUMP_RELAY_PIN, OUTPUT);
+
+  // Pipe
   pipe1 = Pipe1();
   initWifi();
 
-  postPipe();
-  getPipe();
+  // postPipe();
+  // getPipe();
+
+  pipe1.activatePump();
 }
 
 void loop()
 {
-  time_now = millis();
-  while (millis() < time_now + period);
-  Serial.println("F/loop: New period");
-  getPipe();
-  postPipe();
+  pipe1.onBulb();
+  delay(4000);
+  pipe1.offBulb();
+  delay(4000);
+//  time_now = millis();
+//  while (millis() < time_now + period);
+//  Serial.println("\n\nF/loop: New period");
+  // getPipe();
+  // postPipe();
 }
