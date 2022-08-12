@@ -23,7 +23,7 @@
 
 char URL[] = "https://pipe-server.herokuapp.com/v1/pipe";
 // char URL[] = "https://rickandmortyapi.com/api";
-#define PORT 80 // HTTPS port
+#define PORT 80                   // HTTPS port
 #define API_PASSWORD "3124315814" // Api
 
 #define WIFI_SSID "iPhone de ete sech"
@@ -34,106 +34,20 @@ const int period = 10000;
 unsigned long time_now = 0;
 
 // Others
-void flash(int time, int times) {
-  for (int i = 0; i < times; i++) {
+void flash(int time, int times)
+{
+  for (int i = 0; i < times; i++)
+  {
     digitalWrite(FLASH_GPIO_NUM, HIGH);
     delay(time);
     digitalWrite(FLASH_GPIO_NUM, LOW);
-    delay(time); 
+    delay(time);
   }
 };
 
 DHT dht(DHT_PIN, DHT_TYPE);
 
 // Pipe
-class Pipe1
-{
-public:
-  float humidity;
-  float temperature;
-  float light;
-  int isBulbOn;
-  int isPumpOn;
-
-  Pipe1()
-  {
-    Serial.println("C/Pipe: Started");
-    setUpPipe();
-    updatePipe();
-    isBulbOn = 0;
-    isPumpOn = 0;
-  }
-
-  void onBulb()
-  {
-    Serial.println("C/Pipe: onBulb");
-    isBulbOn = 1;
-    _onBulb();
-  }
-  void offBulb()
-  {
-    Serial.println("C/Pipe: offBulb");
-    isBulbOn = 0;
-    _offBulb();
-  }
-  void activatePump()
-  {
-    Serial.println("C/Pipe: activatePump");
-    isPumpOn = 1;
-    _onPump();
-    delay(PUMP_DURATION);
-    _offPump();
-    isPumpOn = 0;
-  }
-
-private:
-  void updatePipe()
-  {
-    Serial.println("C/Pipe: private: updatePipe");
-    humidity = getCurrentHumidity();
-    temperature = getCurrentTemperature();
-    light = getCurrentLight();
-  }
-
-  void setUpPipe() {
-    _setUpBulb();
-  }
-
-  float getCurrentHumidity()
-  {
-    return dht.readHumidity();
-  }
-
-  float getCurrentTemperature()
-  {
-    return dht.readTemperature();
-  }
-
-  float getCurrentLight()
-  {
-    return 13.0;
-  }
-
-  void _setUpBulb() {
-    digitalWrite(BULB_PIN, LOW);
-  }
-
-  void _onBulb() {
-    digitalWrite(BULB_PIN, HIGH);
-  }
-
-  void _offBulb() {
-    digitalWrite(BULB_PIN, LOW);    
-  }
-
-  void _onPump() {
-    digitalWrite(PUMP_RELAY_PIN, HIGH);
-  }
-
-  void _offPump() {
-    digitalWrite(PUMP_RELAY_PIN, LOW);    
-  }
-};
 
 Pipe1 pipe1;
 
@@ -168,34 +82,41 @@ void getPipe()
   http.begin(URL);
   http.addHeader("Content-Type", "application/json");
   http.addHeader("password", API_PASSWORD);
-  int httpCode = http.GET(); 
+  int httpCode = http.GET();
   // if (httpCode > 0) {
-  if (true) {
+  if (true)
+  {
     String payload = http.getString();
     Serial.println("F/getPipe: payload: " + payload);
-    
+
     DynamicJsonDocument jsonRes(BUFFER_SIZE);
     deserializeJson(jsonRes, payload);
     const int lastPipeConnection = int(jsonRes["lastPipeConnection"]);
     const int isBulbOn = int(jsonRes["isBulbOn"]);
     const int isPumpOn = int(jsonRes["isPumpOn"]);
-//    Serial.println("F/getPipe: Last Pipe connection: " + lastPipeConnection);
-//    Serial.println("F/getPipe: isBulbOn: " + isBulbOn);
-//    Serial.println("F/getPipe: isPumpOn: " + isPumpOn);
+    //    Serial.println("F/getPipe: Last Pipe connection: " + lastPipeConnection);
+    //    Serial.println("F/getPipe: isBulbOn: " + isBulbOn);
+    //    Serial.println("F/getPipe: isPumpOn: " + isPumpOn);
 
     Serial.println(lastPipeConnection);
     Serial.println(isBulbOn);
     Serial.println(isPumpOn);
-  
-    if (isBulbOn == 1) {
+
+    if (isBulbOn == 1)
+    {
       pipe1.onBulb();
-    } else { 
+    }
+    else
+    {
       pipe1.offBulb();
     }
-    if (isPumpOn == 1) {
+    if (isPumpOn == 1)
+    {
       pipe1.activatePump();
     }
-  } else {
+  }
+  else
+  {
     flash(100, 5);
     Serial.println("F/getPipe: Error in http request");
     Serial.println(httpCode);
@@ -217,16 +138,18 @@ void postPipe()
   Serial.println("F/postPipe: Body:");
   Serial.println(bodyBuffer);
 
-
   HTTPClient http;
   http.begin(URL);
   http.addHeader("Content-Type", "application/json");
   http.addHeader("password", API_PASSWORD);
-  int httpCode = http.POST(bodyBuffer); 
-  if (httpCode > 0) {
+  int httpCode = http.POST(bodyBuffer);
+  if (httpCode > 0)
+  {
     String payload = http.getString();
     Serial.println("F/postPipe: payload: " + payload);
-  } else {
+  }
+  else
+  {
     flash(100, 5);
     Serial.println("F/postPipe: Error in http request");
     Serial.println(httpCode);
@@ -266,9 +189,9 @@ void loop()
   delay(4000);
   pipe1.offBulb();
   delay(4000);
-//  time_now = millis();
-//  while (millis() < time_now + period);
-//  Serial.println("\n\nF/loop: New period");
+  //  time_now = millis();
+  //  while (millis() < time_now + period);
+  //  Serial.println("\n\nF/loop: New period");
   // getPipe();
   // postPipe();
 }
