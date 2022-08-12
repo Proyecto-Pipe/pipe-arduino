@@ -4,7 +4,8 @@
 #include <HTTPClient.h>
 #include <ArduinoJson.h>
 
-#include "DHT.h"
+// Modules:
+#include "./PIPE.h"
 
 // Variables: =================
 #define VERSION "1.0.3"
@@ -45,11 +46,8 @@ void flash(int time, int times)
   }
 };
 
-DHT dht(DHT_PIN, DHT_TYPE);
-
 // Pipe
-
-Pipe1 pipe1;
+PIPE PIPEInstance;
 
 // Wifi
 const char *ssid = WIFI_SSID;
@@ -104,15 +102,15 @@ void getPipe()
 
     if (isBulbOn == 1)
     {
-      pipe1.onBulb();
+      PIPEInstance.onBulb();
     }
     else
     {
-      pipe1.offBulb();
+      PIPEInstance.offBulb();
     }
     if (isPumpOn == 1)
     {
-      pipe1.activatePump();
+      PIPEInstance.activatePump();
     }
   }
   else
@@ -128,13 +126,13 @@ void postPipe()
 {
   flash(300, 2);
   Serial.println("F/postPipe: Started");
-  Serial.println(pipe1.isPumpOn);
-  Serial.println(pipe1.light);
-  Serial.println(pipe1.humidity);
+  Serial.println(PIPEInstance.isPumpOn);
+  Serial.println(PIPEInstance.light);
+  Serial.println(PIPEInstance.humidity);
 
   char bodyBuffer[BUFFER_SIZE];
   char rawBody[] = "{\"humidity\": \"%f\", \"temperature\": \"%f\", \"light\": \"%f\", \"isBulbOn\": \"%d\", \"isPumpOn\": \"%d\"}";
-  sprintf(bodyBuffer, rawBody, float(pipe1.humidity), float(pipe1.temperature), float(pipe1.light), int(pipe1.isBulbOn), int(pipe1.isPumpOn));
+  sprintf(bodyBuffer, rawBody, float(PIPEInstance.humidity), float(PIPEInstance.temperature), float(PIPEInstance.light), int(PIPEInstance.isBulbOn), int(PIPEInstance.isPumpOn));
   Serial.println("F/postPipe: Body:");
   Serial.println(bodyBuffer);
 
@@ -174,20 +172,20 @@ void setup()
   pinMode(PUMP_RELAY_PIN, OUTPUT);
 
   // Pipe
-  pipe1 = Pipe1();
+  PIPEInstance = PIPE();
   initWifi();
 
   // postPipe();
   // getPipe();
 
-  pipe1.activatePump();
+  PIPEInstance.activatePump();
 }
 
 void loop()
 {
-  pipe1.onBulb();
+  PIPEInstance.onBulb();
   delay(4000);
-  pipe1.offBulb();
+  PIPEInstance.offBulb();
   delay(4000);
   //  time_now = millis();
   //  while (millis() < time_now + period);
