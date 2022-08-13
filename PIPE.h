@@ -25,7 +25,6 @@ private:
   float _getCurrentTemperature();
   float _getCurrentLight();
 
-  void _setUpBulb();
   void _onBulb();
   void _offBulb();
 

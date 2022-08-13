@@ -1,7 +1,9 @@
 #include "PIPE.h"
 
-#include "./DHT/DHT.h"
-DHT dht(DHT_PIN, DHT_TYPE);
+#include "DHT.h"
+#include "./settings.h"
+
+DHT dht = DHT(DHT_PIN, DHT_TYPE);
 
 PIPE::PIPE()
 {
@@ -39,14 +41,21 @@ void PIPE::activatePump()
 void PIPE::_updatePIPE()
 {
   Serial.println("C/Pipe: private: updatePipe");
-  humidity = getCurrentHumidity();
-  temperature = getCurrentTemperature();
-  light = getCurrentLight();
+  humidity = _getCurrentHumidity();
+  temperature = _getCurrentTemperature();
+  light = _getCurrentLight();
 }
 
 void PIPE::_setUpPIPE()
 {
-  _setUpBulb();
+  // Humidity & Temperature:
+  dht.begin();
+
+  // Photoresistor:
+  pinMode(PHOTORESISTOR_PIN, OUTPUT);
+
+  // Pump:
+  pinMode(PUMP_RELAY_PIN, OUTPUT);
 }
 
 float PIPE::_getCurrentHumidity()
@@ -61,12 +70,7 @@ float PIPE::_getCurrentTemperature()
 
 float PIPE::_getCurrentLight()
 {
-  return 13.0;
-}
-
-void PIPE::_setUpBulb()
-{
-  digitalWrite(BULB_PIN, LOW);
+  return analogRead(PHOTORESISTOR_PIN);
 }
 
 void PIPE::_onBulb()
