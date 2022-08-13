@@ -1,3 +1,5 @@
 #include "PIPEInstance.h"
 
-PIPEInstance = PIPE();
+#include "./PIPE.h"
+
+PIPE PIPEInstance = PIPE();

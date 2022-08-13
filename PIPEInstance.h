@@ -3,6 +3,6 @@
 
 #include "./PIPE.h"
 
-PIPE PIPEInstance;
+extern PIPE PIPEInstance;
 
 #endif
