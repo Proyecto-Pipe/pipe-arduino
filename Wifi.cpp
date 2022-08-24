@@ -1,6 +1,5 @@
 #include "Wifi.h"
 
-#include <SPI.h>
 #include <ESP8266WiFi.h>
 #include "./settings.h"
 
