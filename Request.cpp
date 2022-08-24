@@ -1,17 +1,18 @@
 #include "Request.h"
 
-#include <HTTPClient.h>
+#include <ESP8266HTTPClient.h>
 #include <ArduinoJson.h>
-#include "PIPEInstance.h"
-#include "./flash.h"
+#include "./PIPEInstance.h"
 #include "./settings.h"
+
+#include <ESP8266WiFi.h>
+WiFiClient WifiClient;
 
 void getPipe()
 {
-  flash(300, 2);
   Serial.println("F/getPipe: Started");
   HTTPClient http;
-  http.begin(URL);
+  http.begin(WifiClient, URL);
   http.addHeader("Content-Type", "application/json");
   http.addHeader("password", API_PASSWORD);
   int httpCode = http.GET();
@@ -46,7 +47,6 @@ void getPipe()
   }
   else
   {
-    flash(100, 5);
     Serial.println("F/getPipe: Error in http request");
     Serial.println(httpCode);
   }
@@ -55,7 +55,6 @@ void getPipe()
 
 void postPipe()
 {
-  flash(300, 2);
   Serial.println("F/postPipe: Started");
   Serial.println(PIPEInstance.isPumpOn);
   Serial.println(PIPEInstance.light);
@@ -68,7 +67,7 @@ void postPipe()
   Serial.println(bodyBuffer);
 
   HTTPClient http;
-  http.begin(URL);
+  http.begin(WifiClient, URL);
   http.addHeader("Content-Type", "application/json");
   http.addHeader("password", API_PASSWORD);
   int httpCode = http.POST(bodyBuffer);
@@ -79,7 +78,6 @@ void postPipe()
   }
   else
   {
-    flash(100, 5);
     Serial.println("F/postPipe: Error in http request");
     Serial.println(httpCode);
   }

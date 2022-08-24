@@ -54,6 +54,10 @@ void PIPE::_setUpPIPE()
   // Photoresistor:
   pinMode(PHOTORESISTOR_PIN, OUTPUT);
 
+  // Bulb:
+  pinMode(BULB_PIN, OUTPUT);
+  digitalWrite(BULB_PIN, LOW);
+
   // Pump:
   pinMode(PUMP_RELAY_PIN, OUTPUT);
 }

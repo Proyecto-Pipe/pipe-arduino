@@ -1,7 +1,7 @@
 #include "Wifi.h"
 
 #include <SPI.h>
-#include <WiFi.h>
+#include <ESP8266WiFi.h>
 #include "./settings.h"
 
 const char *ssid = WIFI_SSID;

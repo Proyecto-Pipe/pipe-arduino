@@ -10,12 +10,12 @@ unsigned long time_now = 0;
 
 void setup()
 {
-  Serial.begin(9600);
+  Serial.begin(SERIAL_BAUD_RATE);
   Serial.print("\n\n\n\nF/setup: Started version ");
   Serial.println(VERSION);
 
   // Flash:
-  flash(300, 3);
+  flash(300, 1);
 
   // Pipe
   initWifi();
@@ -24,6 +24,7 @@ void setup()
   // getPipe();
 
   PIPEInstance.activatePump();
+  pinMode(14, OUTPUT);
 }
 
 void loop()
