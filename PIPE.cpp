@@ -3,7 +3,7 @@
 #include "DHT.h"
 #include "./settings.h"
 
-DHT dht = DHT(DHT_PIN, DHT_TYPE);
+DHT dhtSensor(DHT_PIN, DHT_TYPE);
 
 PIPE::PIPE()
 {
@@ -49,7 +49,7 @@ void PIPE::_updatePIPE()
 void PIPE::_setUpPIPE()
 {
   // Humidity & Temperature:
-  dht.begin();
+  // dhtSensor.begin();
 
   // Photoresistor:
   pinMode(PHOTORESISTOR_PIN, OUTPUT);
@@ -64,12 +64,12 @@ void PIPE::_setUpPIPE()
 
 float PIPE::_getCurrentHumidity()
 {
-  return dht.readHumidity();
+  return dhtSensor.readHumidity();
 }
 
 float PIPE::_getCurrentTemperature()
 {
-  return dht.readTemperature();
+  return dhtSensor.readTemperature();
 }
 
 float PIPE::_getCurrentLight()

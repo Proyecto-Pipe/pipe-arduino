@@ -1,7 +1,7 @@
 #include "Request.h"
 
 #include <ESP8266HTTPClient.h>
-#include <ArduinoJson.h>
+//#include <ArduinoJson.h>
 #include "./PIPEInstance.h"
 #include "./settings.h"
 
@@ -22,28 +22,28 @@ void getPipe()
     String payload = http.getString();
     Serial.println("F/getPipe: payload: " + payload);
 
-    DynamicJsonDocument jsonRes(BUFFER_SIZE);
-    deserializeJson(jsonRes, payload);
-    const int lastPipeConnection = int(jsonRes["lastPipeConnection"]);
-    const int isBulbOn = int(jsonRes["isBulbOn"]);
-    const int isPumpOn = int(jsonRes["isPumpOn"]);
+//    DynamicJsonDocument jsonRes(BUFFER_SIZE);
+//    deserializeJson(jsonRes, payload);
+//    const int lastPipeConnection = int(jsonRes["lastPipeConnection"]);
+//    const int isBulbOn = int(jsonRes["isBulbOn"]);
+//    const int isPumpOn = int(jsonRes["isPumpOn"]);
 
-    Serial.println(lastPipeConnection);
-    Serial.println(isBulbOn);
-    Serial.println(isPumpOn);
-
-    if (isBulbOn == 1)
-    {
-      PIPEInstance.onBulb();
-    }
-    else
-    {
-      PIPEInstance.offBulb();
-    }
-    if (isPumpOn == 1)
-    {
-      PIPEInstance.activatePump();
-    }
+//    Serial.println(lastPipeConnection);
+//    Serial.println(isBulbOn);
+//    Serial.println(isPumpOn);
+//
+//    if (isBulbOn == 1)
+//    {
+//      PIPEInstance.onBulb();
+//    }
+//    else
+//    {
+//      PIPEInstance.offBulb();
+//    }
+//    if (isPumpOn == 1)
+//    {
+//      PIPEInstance.activatePump();
+//    }
   }
   else
   {
