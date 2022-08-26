@@ -15,12 +15,10 @@ public:
   void onBulb();
   void offBulb();
   void activatePump();
-
+  
+  void setUpPIPE();
+  void updatePIPE();
 private:
-  void _updatePIPE();
-
-  void _setUpPIPE();
-
   float _getCurrentHumidity();
   float _getCurrentTemperature();
   float _getCurrentLight();

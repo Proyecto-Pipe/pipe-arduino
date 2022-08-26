@@ -1,11 +1,12 @@
 #include "Request.h"
 
 #include <ESP8266HTTPClient.h>
-//#include <ArduinoJson.h>
+#include <ArduinoJson.h>
 #include "./PIPEInstance.h"
 #include "./settings.h"
 
 #include <ESP8266WiFi.h>
+#include <WiFiClient.h>
 WiFiClient WifiClient;
 
 void getPipe()
@@ -19,31 +20,40 @@ void getPipe()
 
   if (true)
   {
+        Serial.println(http.headers());
+    for (int i=0; i < http.headers(); i++)
+    {
+      Serial.print(http.headerName(i));
+      Serial.print(": ");
+      Serial.println(http.header(i));
+    }
     String payload = http.getString();
+    Serial.println(payload);
+    Serial.println(httpCode);
     Serial.println("F/getPipe: payload: " + payload);
 
-//    DynamicJsonDocument jsonRes(BUFFER_SIZE);
-//    deserializeJson(jsonRes, payload);
-//    const int lastPipeConnection = int(jsonRes["lastPipeConnection"]);
-//    const int isBulbOn = int(jsonRes["isBulbOn"]);
-//    const int isPumpOn = int(jsonRes["isPumpOn"]);
+    DynamicJsonDocument jsonRes(BUFFER_SIZE);
+    deserializeJson(jsonRes, payload);
+    const int lastPipeConnection = int(jsonRes["lastPipeConnection"]);
+    const int isBulbOn = int(jsonRes["isBulbOn"]);
+    const int isPumpOn = int(jsonRes["isPumpOn"]);
 
-//    Serial.println(lastPipeConnection);
-//    Serial.println(isBulbOn);
-//    Serial.println(isPumpOn);
-//
-//    if (isBulbOn == 1)
-//    {
-//      PIPEInstance.onBulb();
-//    }
-//    else
-//    {
-//      PIPEInstance.offBulb();
-//    }
-//    if (isPumpOn == 1)
-//    {
-//      PIPEInstance.activatePump();
-//    }
+    Serial.println(lastPipeConnection);
+    Serial.println(isBulbOn);
+    Serial.println(isPumpOn);
+
+    if (isBulbOn == 1)
+    {
+      PIPEInstance.onBulb();
+    }
+    else
+    {
+      PIPEInstance.offBulb();
+    }
+    if (isPumpOn == 1)
+    {
+      PIPEInstance.activatePump();
+    }
   }
   else
   {
@@ -56,6 +66,7 @@ void getPipe()
 void postPipe()
 {
   Serial.println("F/postPipe: Started");
+  PIPEInstance.updatePIPE();
   Serial.println(PIPEInstance.isPumpOn);
   Serial.println(PIPEInstance.light);
   Serial.println(PIPEInstance.humidity);

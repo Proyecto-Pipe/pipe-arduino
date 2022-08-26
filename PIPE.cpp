@@ -1,6 +1,6 @@
 #include "PIPE.h"
 
-#include "DHT.h"
+#include <DHT.h>
 #include "./settings.h"
 
 DHT dhtSensor(DHT_PIN, DHT_TYPE);
@@ -8,10 +8,8 @@ DHT dhtSensor(DHT_PIN, DHT_TYPE);
 PIPE::PIPE()
 {
   Serial.println("C/Pipe: Started");
-  _setUpPIPE();
-  _updatePIPE();
-  isBulbOn = 0;
-  isPumpOn = 0;
+  setUpPIPE();
+  updatePIPE();
 }
 
 void PIPE::onBulb()
@@ -38,18 +36,13 @@ void PIPE::activatePump()
   isPumpOn = 0;
 }
 
-void PIPE::_updatePIPE()
+void PIPE::setUpPIPE()
 {
-  Serial.println("C/Pipe: private: updatePipe");
-  humidity = _getCurrentHumidity();
-  temperature = _getCurrentTemperature();
-  light = _getCurrentLight();
-}
+  Serial.println("C/Pipe: setUpPIPE");  
 
-void PIPE::_setUpPIPE()
-{
   // Humidity & Temperature:
-  // dhtSensor.begin();
+  dhtSensor.begin(2000);
+  Serial.println(PIPE::_getCurrentHumidity());
 
   // Photoresistor:
   pinMode(PHOTORESISTOR_PIN, OUTPUT);
@@ -57,9 +50,19 @@ void PIPE::_setUpPIPE()
   // Bulb:
   pinMode(BULB_PIN, OUTPUT);
   digitalWrite(BULB_PIN, LOW);
+  isBulbOn = 0;
 
   // Pump:
   pinMode(PUMP_RELAY_PIN, OUTPUT);
+  isPumpOn = 0;
+}
+
+void PIPE::updatePIPE()
+{
+  Serial.println("C/Pipe: private: updatePipe");
+  humidity = _getCurrentHumidity();
+  temperature = _getCurrentTemperature();
+  light = _getCurrentLight();
 }
 
 float PIPE::_getCurrentHumidity()
