@@ -5,6 +5,7 @@
 
 DHT dhtSensor(DHT_PIN, DHT_TYPE);
 
+
 PIPE::PIPE()
 {
   Serial.println("C/Pipe: Started");
@@ -38,11 +39,13 @@ void PIPE::activatePump()
 
 void PIPE::setUpPIPE()
 {
-  Serial.println("C/Pipe: setUpPIPE");  
+  Serial.println("C/Pipe: setUpPIPE");
 
   // Humidity & Temperature:
+  DHT dhtSensor(DHT_PIN, DHT_TYPE);
   dhtSensor.begin(2000);
-  Serial.println(PIPE::_getCurrentHumidity());
+  Serial.println(dhtSensor.readHumidity());
+//  Serial.println(PIPE::_getCurrentHumidity());
 
   // Photoresistor:
   pinMode(PHOTORESISTOR_PIN, OUTPUT);

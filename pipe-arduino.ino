@@ -12,6 +12,9 @@
 #include "./Request.h"
 #include "./settings.h"
 
+#include <DHT.h>
+#include <DHT_U.h>
+
 // Millis()
 const int period = 10000;
 unsigned long time_now = 0;
@@ -21,6 +24,8 @@ const char *password1 = WIFI_PASSWORD;
 
 void setup()
 {
+
+
 //    ESP.wdtDisable();
   //ESP.wdtEnable(10000);
   //ESP.wdtFeed();
@@ -34,6 +39,11 @@ void setup()
   Serial.println(VERSION);
   PIPEInstance.setUpPIPE();
   PIPEInstance.updatePIPE();
+
+//DHT dhtSensor(DHT_PIN, DHT_TYPE);
+
+//    dhtSensor.begin(2000);
+//    Serial.println(dhtSensor.readHumidity());
 
   // Flash:
 //  flash(300, 1);
