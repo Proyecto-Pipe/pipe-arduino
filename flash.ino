@@ -6,11 +6,11 @@ int i = 0;
 
 void flash(int time, int times)
 {
-  if (i == 0) {
+  if (i == 0)
+  {
     pinMode(FLASH_PIN, OUTPUT);
     i++;
   }
-  
 
   for (int i = 0; i < times; i++)
   {

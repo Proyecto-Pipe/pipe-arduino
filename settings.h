@@ -26,12 +26,11 @@
 #define BUFFER_SIZE 174
 
 #define SERIAL_BAUD_RATE 115200
-//#define SERIAL_BAUD_RATE 9600
 
-const char URL[] = "https://pipe-server.herokuapp.com/v1/pipe";
-// char URL[] = "https://rickandmortyapi.com/api";
-#define PORT 80                   // HTTPS port
-#define API_PASSWORD "23deherrera" // Api
+const char URL[] = "http://pipe-server.herokuapp.com/v1/pipe";
+
+#define PORT 80
+#define API_PASSWORD "4141"
 
 #define WIFI_SSID "iPhone de ete sech"
 #define WIFI_PASSWORD "password"

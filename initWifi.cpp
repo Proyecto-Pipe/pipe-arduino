@@ -1,4 +1,4 @@
-#include "Wifi.h"
+#include "./initWifi.h"
 
 #include <ESP8266WiFi.h>
 #include "./settings.h"

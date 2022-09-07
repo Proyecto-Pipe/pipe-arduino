@@ -1,4 +1,4 @@
-#include "PIPEInstance.h"
+#include "./PIPEInstance.h"
 
 #include "./PIPE.h"
 

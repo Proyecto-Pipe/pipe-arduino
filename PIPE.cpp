@@ -1,10 +1,9 @@
-#include "PIPE.h"
+#include "./PIPE.h"
 
 #include <DHT.h>
 #include "./settings.h"
 
 DHT dhtSensor(DHT_PIN, DHT_TYPE);
-
 
 PIPE::PIPE()
 {
@@ -42,10 +41,7 @@ void PIPE::setUpPIPE()
   Serial.println("C/Pipe: setUpPIPE");
 
   // Humidity & Temperature:
-  DHT dhtSensor(DHT_PIN, DHT_TYPE);
-  dhtSensor.begin(2000);
-  Serial.println(dhtSensor.readHumidity());
-//  Serial.println(PIPE::_getCurrentHumidity());
+  dhtSensor.begin();
 
   // Photoresistor:
   pinMode(PHOTORESISTOR_PIN, OUTPUT);
