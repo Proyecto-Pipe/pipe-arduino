@@ -46,32 +46,32 @@ Librerías:
 
 ### Estructura de archivos:
 
-- /pipe-arduino.ino: Archivo principal.
+- **/pipe-arduino.ino**: Archivo principal.
 
-<details>
- <summary>/settings.h</summary>
- Archivo con las siguientes variables de entorno:
- - **VERSION**: String (Ej: "1.0.3").
-- **FLASH_PIN**: Pin (Ej: D7, D2) con led para debugging.
-- **DHT_PIN**: Pin con sensor DHT.
-- **DHT_TYPE**: Tipo de sensor DHT (Ej: DHT11, DHT22).
-- **PUMP_RELAY_PIN**: Pin con bomba de agua.
-- **PUMP_DURATION**: Duración en milisegundos del riego (Ej: 2000).
-- **BULB_PIN**: Pin con bombilla.
-- **PHOTORESISTOR_PIN**: Pin con fotoresistencia.
-- **SOUL_MOISTURE_SENSOR_PIN**: Pin analógico con sensor de humedad del suelo (Ej: A0)
-- **BUFFER_SIZE**: Tamaño del buffer de peticiones http (Ej: 174).
-- **SERIAL_BAUD_RATE**: Baud rate para debuggear en monitor serial (Ej: 115200).
-- **URL**: Url del servidor pipe-server.
-- **PORT**: Puerto a acceder en el servidor pipe-server.
-- **API_PASSWORD**: Contraseña del servidor pipe-server.
-- **WIFI_SSID**
-- **WIFI_PASSWORD**
-</details>
+- **/settings.h**: Archivo con las siguientes variables de entorno:
 
-**/pipe-arduino.ino**: Archivo principal.
-**/pipe-arduino.ino**: Archivo principal.
-**/pipe-arduino.ino**: Archivo principal.
+  - **VERSION**: String (Ej: "1.0.3").
+  - **FLASH_PIN**: Pin (Ej: D7, D2) con led para debugging.
+  - **DHT_PIN**: Pin con sensor DHT.
+  - **DHT_TYPE**: Tipo de sensor DHT (Ej: DHT11, DHT22).
+  - **PUMP_RELAY_PIN**: Pin con bomba de agua.
+  - **PUMP_DURATION**: Duración en milisegundos del riego (Ej: 2000).
+  - **BULB_PIN**: Pin con bombilla.
+  - **PHOTORESISTOR_PIN**: Pin con fotoresistencia.
+  - **SOUL_MOISTURE_SENSOR_PIN**: Pin analógico con sensor de humedad del suelo (Ej: A0)
+  - **BUFFER_SIZE**: Tamaño del buffer de peticiones http (Ej: 174).
+  - **SERIAL_BAUD_RATE**: Baud rate para debuggear en monitor serial (Ej: 115200).
+  - **URL**: Url del servidor pipe-server. (Ej: "https://pipe-server.herokuapp.com/")
+  - **PORT**: Puerto a acceder en el servidor pipe-server.
+  - **API_PASSWORD**: Contraseña del servidor pipe-server.
+  - **WIFI_SSID**: SSID de la red wifi a la que se conectará la placa.
+  - **WIFI_PASSWORD**: Contraseña de la red wifi a la que se conectará la placa.
+
+- **/flash.h**: Declaración de la función ` void flash(int time, int times);` que hace parpadear el led especificado en `FLASH_PIN`, el tiempo indicado la cantidad de veces indicada. (Definición de la función en **/flash.ino**).
+- **/initWifi.h**: Declaración de la función `void initWifi();` que conecta la placa a internet. (Definición de la función en **/initWifi.cpp**).
+- **/PIPE.h**: Declaración de la clase `PIPE` encargada de guardar y modificar el estado de las variables del invernadero. (Definición de la clase en **/PIPE.cpp**).
+- **/PIPEInstance.h**: Declaración de la instancia `PIPEInstance` de la clase `PIPE` siguiendo el patrón [Singleton][singleton]. (Definición en **/PIPEInstance.cpp**).
+- **/request.h**: Declaración de funciones `void getPipe();` y `void postPipe();` encargadas de manejar las peticiones HTTP. (Definición de las funciones en **/request.cpp**).
 
 ## Autores
 
@@ -88,3 +88,4 @@ P.I.P.E ha sido creado por **[Julian Franco][julian franco]**, **Zaida Guzman** 
 [arduino ide]: https://www.arduino.cc/en/software "Arduino IDE"
 [arduinojson]: https://arduinojson.org/?utm_source=meta&utm_medium=library.properties "ArduinoJson"
 [dht sensor library]: https://github.com/adafruit/DHT-sensor-library "DHT sensor library"
+[singleton]: https://refactoring.guru/design-patterns/singleton "Singleton"
