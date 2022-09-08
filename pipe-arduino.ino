@@ -12,8 +12,6 @@
 #include "./Request.h"
 #include "./settings.h"
 
-#include <DHT.h>
-
 // Millis()
 const int period = 10000;
 unsigned long time_now = 0;
