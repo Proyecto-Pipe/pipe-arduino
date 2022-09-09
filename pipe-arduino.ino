@@ -31,21 +31,21 @@ void setup()
   Serial.println(VERSION);
   PIPEInstance.setUpPIPE();
   PIPEInstance.updatePIPE();
-
+  PIPEInstance.activatePump();
   // Flash:
   // flash(300, 1);
 
-  initWifi();
-  getPipe();
-  // postPipe();
+//  initWifi();
+//  getPipe();
+//  postPipe();
 }
 
 void loop()
 {
-  PIPEInstance.onBulb();
-  delay(4000);
-  PIPEInstance.offBulb();
-  delay(4000);
+//  PIPEInstance.onBulb();
+//  delay(4000);
+//  PIPEInstance.offBulb();
+//  delay(4000);
   // time_now = millis();
   //  while (millis() < time_now + period);
   //  Serial.println("\n\nF/loop: New period");

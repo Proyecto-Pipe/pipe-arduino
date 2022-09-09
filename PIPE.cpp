@@ -34,6 +34,7 @@ void PIPE::activatePump()
   delay(PUMP_DURATION);
   _offPump();
   isPumpOn = 0;
+  Serial.println("C/Pipe: activatePump finished");
 }
 
 void PIPE::setUpPIPE()
@@ -41,10 +42,10 @@ void PIPE::setUpPIPE()
   Serial.println("C/Pipe: setUpPIPE");
 
   // Humidity & Temperature:
-  dhtSensor.begin();
+  // dhtSensor.begin();
 
   // Photoresistor:
-  pinMode(PHOTORESISTOR_PIN, OUTPUT);
+  pinMode(PHOTORESISTOR_PIN, INPUT);
 
   // Bulb:
   pinMode(BULB_PIN, OUTPUT);
@@ -58,7 +59,7 @@ void PIPE::setUpPIPE()
 
 void PIPE::updatePIPE()
 {
-  Serial.println("C/Pipe: private: updatePipe");
+  Serial.println("C/Pipe: updatePipe");
   humidity = _getCurrentHumidity();
   temperature = _getCurrentTemperature();
   light = _getCurrentLight();
