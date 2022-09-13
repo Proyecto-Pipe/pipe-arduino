@@ -65,7 +65,7 @@ void getPipe()
 void postPipe()
 {
   Serial.println("F/postPipe: Started");
-  PIPEInstance.updatePIPE();
+  PIPEInstance.update();
   Serial.println(PIPEInstance.isPumpOn);
   Serial.println(PIPEInstance.light);
   Serial.println(PIPEInstance.humidity);

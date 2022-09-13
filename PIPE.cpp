@@ -8,8 +8,8 @@ DHT dhtSensor(DHT_PIN, DHT_TYPE);
 PIPE::PIPE()
 {
   Serial.println("C/Pipe: Started");
-  setUpPIPE();
-  updatePIPE();
+  setUp();
+  update();
 }
 
 void PIPE::onBulb()
@@ -37,9 +37,9 @@ void PIPE::activatePump()
   Serial.println("C/Pipe: activatePump finished");
 }
 
-void PIPE::setUpPIPE()
+void PIPE::setUp()
 {
-  Serial.println("C/Pipe: setUpPIPE");
+  Serial.println("C/Pipe: setUp");
 
   // Humidity & Temperature:
   // dhtSensor.begin();
@@ -57,12 +57,24 @@ void PIPE::setUpPIPE()
   isPumpOn = 0;
 }
 
-void PIPE::updatePIPE()
+void PIPE::update()
 {
-  Serial.println("C/Pipe: updatePipe");
+  Serial.println("C/Pipe: update");
   humidity = _getCurrentHumidity();
   temperature = _getCurrentTemperature();
   light = _getCurrentLight();
+}
+
+void PIPE::debug()
+{
+  Serial.println("C/Pipe: debug:");
+  update();
+  Serial.print("  Humidity: ");
+  Serial.println(humidity);
+  Serial.print("  Temperature: ");
+  Serial.println(temperature);
+  Serial.print("  Light: ");
+  Serial.println(light);
 }
 
 float PIPE::_getCurrentHumidity()

@@ -2,6 +2,8 @@
 #define FLASH_PIN 4
 #define INPUT_PIN 12
 
+#define INT_VALUE_TO_ACTIVATE 20
+
 void setup() {
   Serial.begin(9600);
   Serial.println("Hello");
@@ -15,7 +17,8 @@ void setup() {
 }
 
 void loop() {
-  if (digitalRead(INPUT_PIN) == HIGH) {
+  Serial.println(analogRead(INPUT_PIN));
+  if (analogRead(INPUT_PIN) >= INT_VALUE_TO_ACTIVATE) {
     Serial.println("HIGH");
     digitalWrite(OUTPUT_PIN, HIGH);
     digitalWrite(FLASH_PIN, HIGH);

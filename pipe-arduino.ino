@@ -29,8 +29,8 @@ void setup()
   // while(!Serial) yield();
   Serial.print("\n\n\n\nF/setup: Started version ");
   Serial.println(VERSION);
-  PIPEInstance.setUpPIPE();
-  PIPEInstance.updatePIPE();
+  PIPEInstance.setUp();
+  PIPEInstance.update();
   PIPEInstance.activatePump();
   // Flash:
   // flash(300, 1);
@@ -42,8 +42,9 @@ void setup()
 
 void loop()
 {
+    PIPEInstance.debug();
 //  PIPEInstance.onBulb();
-//  delay(4000);
+  delay(1000);
 //  PIPEInstance.offBulb();
 //  delay(4000);
   // time_now = millis();

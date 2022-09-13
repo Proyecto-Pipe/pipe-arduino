@@ -16,8 +16,9 @@ public:
   void offBulb();
   void activatePump();
 
-  void setUpPIPE();
-  void updatePIPE();
+  void setUp();
+  void update();
+  void debug();
 
 private:
   float _getCurrentHumidity();
