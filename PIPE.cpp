@@ -28,6 +28,20 @@ void PIPE::offBulb()
   _offBulb();
 }
 
+void PIPE::onFan()
+{
+  Serial.println("C/Pipe: onFan");
+  isFanOn = 1;
+  _onFan();
+}
+
+void PIPE::offFan()
+{
+  Serial.println("C/Pipe: offFan");
+  isFanOn = 0;
+  _offFan();
+}
+
 void PIPE::activatePump()
 {
   Serial.println("C/Pipe: activatePump");
@@ -54,8 +68,11 @@ void PIPE::setUp()
   digitalWrite(BULB_PIN, LOW);
   isBulbOn = 0;
 
+  // Fan:
+  pinMode(FAN_PIN, OUTPUT);
+
   // Pump:
-  pinMode(PUMP_RELAY_PIN, OUTPUT);
+  pinMode(PUMP_PIN, OUTPUT);
   isPumpOn = 0;
 }
 
@@ -105,12 +122,22 @@ void PIPE::_offBulb()
   digitalWrite(BULB_PIN, LOW);
 }
 
+void PIPE::_onFan()
+{
+  digitalWrite(FAN_PIN, HIGH);
+}
+
+void PIPE::_offFan()
+{
+  digitalWrite(FAN_PIN, LOW);
+}
+
 void PIPE::_onPump()
 {
-  digitalWrite(PUMP_RELAY_PIN, HIGH);
+  digitalWrite(PUMP_PIN, HIGH);
 }
 
 void PIPE::_offPump()
 {
-  digitalWrite(PUMP_RELAY_PIN, LOW);
+  digitalWrite(PUMP_PIN, LOW);
 }
