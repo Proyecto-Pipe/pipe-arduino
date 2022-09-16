@@ -3,6 +3,8 @@
 #include <DHT.h>
 #include "./settings.h"
 
+const float MAX_ANALOG_LIGHT = 1024;
+
 DHT dhtSensor(DHT_PIN, DHT_TYPE);
 
 PIPE::PIPE()
@@ -89,7 +91,8 @@ float PIPE::_getCurrentTemperature()
 
 float PIPE::_getCurrentLight()
 {
-  return analogRead(PHOTORESISTOR_PIN);
+  const float analogLight = analogRead(PHOTORESISTOR_PIN);
+  return (analogLight * 100.0) / MAX_ANALOG_LIGHT;
 }
 
 void PIPE::_onBulb()

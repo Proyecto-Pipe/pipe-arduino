@@ -22,31 +22,20 @@ const char *password1 = WIFI_PASSWORD;
 void setup()
 {
   Serial.begin(SERIAL_BAUD_RATE);
-  // Experimental code:
-  //
-  // Serial.setTimeout(2000);
-  // delay(100);
-  // while(!Serial) yield();
   Serial.print("\n\n\n\nF/setup: Started version ");
   Serial.println(VERSION);
   PIPEInstance.setUp();
   PIPEInstance.update();
-  PIPEInstance.activatePump();
-  // Flash:
-  // flash(300, 1);
 
-//  initWifi();
-//  getPipe();
-//  postPipe();
+  initWifi();
+  getPipe();
+  postPipe();
 }
 
 void loop()
 {
-    PIPEInstance.debug();
-//  PIPEInstance.onBulb();
+  PIPEInstance.debug();
   delay(1000);
-//  PIPEInstance.offBulb();
-//  delay(4000);
   // time_now = millis();
   //  while (millis() < time_now + period);
   //  Serial.println("\n\nF/loop: New period");
