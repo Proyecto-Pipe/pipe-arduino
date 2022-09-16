@@ -5,16 +5,9 @@
 #define DEBUG_MSG(...)
 #endif
 
-// Dependencies:
-#include <DHT.h>
-
 // Modules:
 #include "./PIPEInstance.h"
-#include "./initWifi.h"
-#include "./flash.h"
-#include "./Request.h"
 #include "./settings.h"
-#include "./dhtSensor.h"
 
 // Millis()
 const int period = 10000;
@@ -23,16 +16,14 @@ unsigned long time_now = 0;
 const char *ssid1 = WIFI_SSID;
 const char *password1 = WIFI_PASSWORD;
 
+#include <DHT.h>
+DHT dhtSensor(DHT_PIN, DHT_TYPE);
 void setup()
 {
   Serial.begin(SERIAL_BAUD_RATE);
   Serial.print("\n\n\n\nF/setup: Started version ");
   Serial.println(VERSION);
-
-  DHT localDhtSensor(DHT_PIN, DHT_TYPE);
-  *dhtSensor = &localDhtSensor;
   dhtSensor.begin();
-
   PIPEInstance.setUp();
   PIPEInstance.update();
 
@@ -43,8 +34,7 @@ void setup()
 
 void loop()
 {
-  PIPEInstance.debug();
-  delay(1000);
+  Serial.println(dhtSensor.readHumidity());
   // time_now = millis();
   //  while (millis() < time_now + period);
   //  Serial.println("\n\nF/loop: New period");
