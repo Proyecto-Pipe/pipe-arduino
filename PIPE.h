@@ -10,10 +10,13 @@ public:
   float temperature;
   float light;
   int isBulbOn;
+  int isFanOn;
   int isPumpOn;
 
   void onBulb();
   void offBulb();
+  void onFan();
+  void offFan();
   void activatePump();
 
   void setUp();
@@ -27,6 +30,9 @@ private:
 
   void _onBulb();
   void _offBulb();
+
+  void _onFan();
+  void _offFan();
 
   void _onPump();
   void _offPump();

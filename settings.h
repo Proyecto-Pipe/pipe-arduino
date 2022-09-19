@@ -14,10 +14,12 @@
 #define DHT_PIN D4
 #define DHT_TYPE DHT11
 
-#define PUMP_RELAY_PIN D2
-#define PUMP_DURATION 2000
-
 #define BULB_PIN D5
+
+#define FAN_PIN D0
+
+#define PUMP_PIN D2
+#define PUMP_DURATION 2000
 
 #define PHOTORESISTOR_PIN A0
 

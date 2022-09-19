@@ -27,15 +27,17 @@ void setup()
   PIPEInstance.setUp();
   PIPEInstance.update();
 
-  initWifi();
-  getPipe();
-  postPipe();
+  // initWifi();
+  // getPipe();
+  // postPipe();
 }
 
 void loop()
 {
-  PIPEInstance.debug();
-  delay(1000);
+  PIPEInstance.onFan();
+  delay(4000);
+  PIPEInstance.offFan();
+  delay(10000);
   // time_now = millis();
   //  while (millis() < time_now + period);
   //  Serial.println("\n\nF/loop: New period");
