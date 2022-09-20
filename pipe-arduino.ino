@@ -14,14 +14,10 @@
 #include "./flash.h"
 #include "./Request.h"
 #include "./settings.h"
-#include "./dhtSensor.h"
 
 // Millis()
 const int period = 10000;
 unsigned long time_now = 0;
-
-const char *ssid1 = WIFI_SSID;
-const char *password1 = WIFI_PASSWORD;
 
 void setup()
 {
@@ -30,10 +26,10 @@ void setup()
   Serial.println(VERSION);
 
   DHT localDhtSensor(DHT_PIN, DHT_TYPE);
-  *dhtSensor = &localDhtSensor;
-  dhtSensor.begin();
+  DHT* dhtSensorPtr = &localDhtSensor;
+  dhtSensorPtr->begin();
 
-  PIPEInstance.setUp();
+  PIPEInstance.setUp(dhtSensorPtr);
   PIPEInstance.update();
 
   // initWifi();

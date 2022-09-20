@@ -3,15 +3,12 @@
 #include "./settings.h"
 
 #include <DHT.h>
-#include "./dhtSensor.h"
 
 const float MAX_ANALOG_LIGHT = 1024;
 
 PIPE::PIPE()
 {
   Serial.println("C/Pipe: Started");
-  setUp();
-  update();
 }
 
 void PIPE::onBulb()
@@ -53,9 +50,12 @@ void PIPE::activatePump()
   Serial.println("C/Pipe: activatePump finished");
 }
 
-void PIPE::setUp()
+void PIPE::setUp(DHT* dhtSensorPtr_)
 {
   Serial.println("C/Pipe: setUp");
+  // DHT:
+  dhtSensorPtr = dhtSensorPtr_;
+
   // Photoresistor:
   pinMode(PHOTORESISTOR_PIN, INPUT);
 
@@ -94,12 +94,12 @@ void PIPE::debug()
 
 float PIPE::_getCurrentHumidity()
 {
-  return dhtSensor.readHumidity();
+  return dhtSensorPtr->readHumidity();
 }
 
 float PIPE::_getCurrentTemperature()
 {
-  return dhtSensor.readTemperature();
+  return dhtSensorPtr->readTemperature();
 }
 
 float PIPE::_getCurrentLight()

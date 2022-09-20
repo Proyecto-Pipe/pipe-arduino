@@ -1,6 +1,8 @@
 #ifndef PIPE_H
 #define PIPE_H
 
+#include <DHT.h>
+
 class PIPE
 {
 public:
@@ -19,11 +21,13 @@ public:
   void offFan();
   void activatePump();
 
-  void setUp();
+  void setUp(DHT* dhtSensorPtr_);
   void update();
   void debug();
 
 private:
+  DHT* dhtSensorPtr;
+
   float _getCurrentHumidity();
   float _getCurrentTemperature();
   float _getCurrentLight();
