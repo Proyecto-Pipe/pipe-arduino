@@ -21,9 +21,9 @@
 #define PUMP_PIN D2
 #define PUMP_DURATION 2000
 
-#define PHOTORESISTOR_PIN D3
-
-#define SOUL_MOISTURE_SENSOR_PIN A0
+#define ANALOG_PIN A0
+#define PHOTORESISTOR_ACTIVATOR_PIN D2
+#define SOIL_ACTIVATOR_PIN D8
 
 #define DISPLAY_SDA D4 // Serial Data
 #define DISPLAY_SCL D5 // Serial Clock

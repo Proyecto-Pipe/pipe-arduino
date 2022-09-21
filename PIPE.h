@@ -22,6 +22,7 @@ public:
   void activatePump();
 
   void setUp(DHT* dhtSensorPtr_);
+//  void setUp();
   void update();
   void debug();
 

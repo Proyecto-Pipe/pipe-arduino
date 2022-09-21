@@ -50,14 +50,17 @@ void PIPE::activatePump()
   Serial.println("C/Pipe: activatePump finished");
 }
 
-void PIPE::setUp(DHT* dhtSensorPtr_)
+void PIPE::setUp(DHT *dhtSensorPtr_)
+//void PIPE::setUp()
 {
   Serial.println("C/Pipe: setUp");
   // DHT:
   dhtSensorPtr = dhtSensorPtr_;
 
-  // Photoresistor:
-  pinMode(PHOTORESISTOR_PIN, INPUT);
+  // Photoresistor and Soil:
+  pinMode(ANALOG_PIN, INPUT);
+  pinMode(PHOTORESISTOR_ACTIVATOR_PIN, OUTPUT);
+  pinMode(SOIL_ACTIVATOR_PIN, OUTPUT);
 
   // Bulb:
   pinMode(BULB_PIN, OUTPUT);
@@ -74,38 +77,56 @@ void PIPE::setUp(DHT* dhtSensorPtr_)
 
 void PIPE::update()
 {
-  Serial.println("C/Pipe: update");
-  humidity = _getCurrentHumidity();
+  Serial.print("C/Pipe: update: ");
+//  humidity = _getCurrentHumidity();
+  Serial.print("humidity ");
   temperature = _getCurrentTemperature();
+  Serial.print("temperature ");
   light = _getCurrentLight();
+  Serial.print("light\n");
 }
 
 void PIPE::debug()
 {
   Serial.println("C/Pipe: debug:");
   update();
-  Serial.print("  Humidity: ");
+  Serial.print("  humidity: ");
   Serial.println(humidity);
-  Serial.print("  Temperature: ");
+  Serial.print("  temperature: ");
   Serial.println(temperature);
-  Serial.print("  Light: ");
+  Serial.print("  light: ");
   Serial.println(light);
+  Serial.print("  isBulbOn: ");
+  Serial.println(isBulbOn);
+  Serial.print("  isFanOn: ");
+  Serial.println(isFanOn);
+  Serial.print("  isPumpOn: ");
+  Serial.println(isPumpOn);
 }
 
 float PIPE::_getCurrentHumidity()
 {
-  return dhtSensorPtr->readHumidity();
+  digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, LOW);
+  digitalWrite(SOIL_ACTIVATOR_PIN, HIGH);
+  delay(200);
+  const float analogHumidity = analogRead(ANALOG_PIN);
+  return analogHumidity;
 }
 
 float PIPE::_getCurrentTemperature()
 {
-  return dhtSensorPtr->readTemperature();
+//  return dhtSensorPtr->readTemperature();
+  return 32.2;
 }
 
 float PIPE::_getCurrentLight()
 {
-  const float analogLight = analogRead(PHOTORESISTOR_PIN);
-  return (analogLight * 100.0) / MAX_ANALOG_LIGHT;
+//  digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, HIGH);
+//  digitalWrite(SOIL_ACTIVATOR_PIN, LOW);
+//  delay(200);
+  const float analogLight = analogRead(ANALOG_PIN);
+//  return (analogLight * 100.0) / MAX_ANALOG_LIGHT;
+  return analogLight;
 }
 
 void PIPE::_onBulb()

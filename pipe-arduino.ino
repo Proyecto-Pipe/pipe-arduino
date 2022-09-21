@@ -26,11 +26,13 @@ void setup()
   Serial.println(VERSION);
 
   DHT localDhtSensor(DHT_PIN, DHT_TYPE);
+  localDhtSensor.begin();
   DHT* dhtSensorPtr = &localDhtSensor;
-  dhtSensorPtr->begin();
-
+//  dhtSensorPtr->begin();
   PIPEInstance.setUp(dhtSensorPtr);
+//  PIPEInstance.setUp();
   PIPEInstance.update();
+  PIPEInstance.onBulb();
 
   // initWifi();
   // getPipe();
@@ -39,10 +41,10 @@ void setup()
 
 void loop()
 {
-  PIPEInstance.onFan();
-  delay(4000);
-  PIPEInstance.offFan();
-  delay(10000);
+  PIPEInstance.debug();
+  delay(1000);
+//  PIPEInstance.offFan();
+//  delay(10000);
   // time_now = millis();
   //  while (millis() < time_now + period);
   //  Serial.println("\n\nF/loop: New period");
