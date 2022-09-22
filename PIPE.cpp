@@ -4,7 +4,8 @@
 
 #include <DHT.h>
 
-const float MAX_ANALOG_LIGHT = 1024;
+const float MAX_ANALOG_LIGHT = 1024.0;
+const float MAX_ANALOG_SOIL_HUMIDITY = 1024.0;
 
 PIPE::PIPE()
 {
@@ -78,8 +79,10 @@ void PIPE::setUp(DHT *dhtSensorPtr_)
 void PIPE::update()
 {
   Serial.print("C/Pipe: update: ");
-//  humidity = _getCurrentHumidity();
-  Serial.print("humidity ");
+  airHumidity = _getCurrentAirHumidity();
+  Serial.print("airHumidity ");
+  soilHumidity = _getCurrentSoilHumidity();
+  Serial.print("soilHumidity ");
   temperature = _getCurrentTemperature();
   Serial.print("temperature ");
   light = _getCurrentLight();
@@ -90,8 +93,10 @@ void PIPE::debug()
 {
   Serial.println("C/Pipe: debug:");
   update();
-  Serial.print("  humidity: ");
-  Serial.println(humidity);
+  Serial.print("  airHumidity: ");
+  Serial.println(airHumidity);
+  Serial.print("  soilHumidity: ");
+  Serial.println(soilHumidity);
   Serial.print("  temperature: ");
   Serial.println(temperature);
   Serial.print("  light: ");
@@ -104,13 +109,20 @@ void PIPE::debug()
   Serial.println(isPumpOn);
 }
 
-float PIPE::_getCurrentHumidity()
+float PIPE::_getCurrentAirHumidity()
 {
+//  return dhtSensorPtr->readHumidity();
+  return 12.2;
+}
+
+float PIPE::_getCurrentSoilHumidity()
+{
+  delay(200);
   digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, LOW);
   digitalWrite(SOIL_ACTIVATOR_PIN, HIGH);
-  delay(200);
   const float analogHumidity = analogRead(ANALOG_PIN);
-  return analogHumidity;
+  const float inverseHumidity = MAX_ANALOG_SOIL_HUMIDITY - analogHumidity;
+  return (inverseHumidity * 100.0) / MAX_ANALOG_SOIL_HUMIDITY;
 }
 
 float PIPE::_getCurrentTemperature()
@@ -121,11 +133,11 @@ float PIPE::_getCurrentTemperature()
 
 float PIPE::_getCurrentLight()
 {
-//  digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, HIGH);
-//  digitalWrite(SOIL_ACTIVATOR_PIN, LOW);
-//  delay(200);
+  delay(200);
+  digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, HIGH);
+  digitalWrite(SOIL_ACTIVATOR_PIN, LOW);
   const float analogLight = analogRead(ANALOG_PIN);
-//  return (analogLight * 100.0) / MAX_ANALOG_LIGHT;
+  return (analogLight * 100.0) / MAX_ANALOG_LIGHT;
   return analogLight;
 }
 

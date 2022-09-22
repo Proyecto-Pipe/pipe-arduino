@@ -8,7 +8,8 @@ class PIPE
 public:
   PIPE();
 
-  float humidity;
+  float airHumidity;
+  float soilHumidity;
   float temperature;
   float light;
   int isBulbOn;
@@ -29,7 +30,8 @@ public:
 private:
   DHT* dhtSensorPtr;
 
-  float _getCurrentHumidity();
+  float _getCurrentAirHumidity();
+  float _getCurrentSoilHumidity();
   float _getCurrentTemperature();
   float _getCurrentLight();
 

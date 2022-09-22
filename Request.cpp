@@ -68,11 +68,11 @@ void postPipe()
   PIPEInstance.update();
   Serial.println(PIPEInstance.isPumpOn);
   Serial.println(PIPEInstance.light);
-  Serial.println(PIPEInstance.humidity);
+  Serial.println(PIPEInstance.airHumidity);
 
   char bodyBuffer[BUFFER_SIZE];
-  char rawBody[] = "{\"humidity\": \"%f\", \"temperature\": \"%f\", \"light\": \"%f\", \"isBulbOn\": \"%d\", \"isPumpOn\": \"%d\"}";
-  sprintf(bodyBuffer, rawBody, float(PIPEInstance.humidity), float(PIPEInstance.temperature), float(PIPEInstance.light), int(PIPEInstance.isBulbOn), int(PIPEInstance.isPumpOn));
+  char rawBody[] = "{\"airHumidity\": \"%f\", \"soilHumidity\": \"%f\", \"temperature\": \"%f\", \"light\": \"%f\", \"isBulbOn\": \"%d\", \"isFanOn\": \"%d\", \"isPumpOn\": \"%d\"}";
+  sprintf(bodyBuffer, rawBody, float(PIPEInstance.airHumidity), float(PIPEInstance.soilHumidity), float(PIPEInstance.temperature), float(PIPEInstance.light), int(PIPEInstance.isBulbOn), int(PIPEInstance.isFanOn), int(PIPEInstance.isPumpOn));
   Serial.println("F/postPipe: Body:");
   Serial.println(bodyBuffer);
 
