@@ -26,14 +26,14 @@ public:
 //  void setUp();
   void update();
   void debug();
-
+  float _getAirHumidity();
 private:
   DHT* dhtSensorPtr;
 
-  float _getCurrentAirHumidity();
-  float _getCurrentSoilHumidity();
-  float _getCurrentTemperature();
-  float _getCurrentLight();
+
+  float _getSoilHumidity();
+  float _getTemperature();
+  float _getLight();
 
   void _onBulb();
   void _offBulb();

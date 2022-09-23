@@ -9,7 +9,7 @@ const float MAX_ANALOG_SOIL_HUMIDITY = 1024.0;
 
 PIPE::PIPE()
 {
-  Serial.println("C/Pipe: Started");
+  Serial.println("C/Pipe: PIPE");
 }
 
 void PIPE::onBulb()
@@ -57,6 +57,7 @@ void PIPE::setUp(DHT *dhtSensorPtr_)
   Serial.println("C/Pipe: setUp");
   // DHT:
   dhtSensorPtr = dhtSensorPtr_;
+  Serial.println(dhtSensorPtr->readHumidity());
 
   // Photoresistor and Soil:
   pinMode(ANALOG_PIN, INPUT);
@@ -79,13 +80,13 @@ void PIPE::setUp(DHT *dhtSensorPtr_)
 void PIPE::update()
 {
   Serial.print("C/Pipe: update: ");
-  airHumidity = _getCurrentAirHumidity();
+  airHumidity = _getAirHumidity();
   Serial.print("airHumidity ");
-  soilHumidity = _getCurrentSoilHumidity();
+  soilHumidity = _getSoilHumidity();
   Serial.print("soilHumidity ");
-  temperature = _getCurrentTemperature();
+  temperature = _getTemperature();
   Serial.print("temperature ");
-  light = _getCurrentLight();
+  light = _getLight();
   Serial.print("light\n");
 }
 
@@ -109,36 +110,33 @@ void PIPE::debug()
   Serial.println(isPumpOn);
 }
 
-float PIPE::_getCurrentAirHumidity()
+float PIPE::_getAirHumidity()
 {
-//  return dhtSensorPtr->readHumidity();
-  return 12.2;
+  return dhtSensorPtr->readHumidity();
 }
 
-float PIPE::_getCurrentSoilHumidity()
+float PIPE::_getSoilHumidity()
 {
-  delay(200);
   digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, LOW);
   digitalWrite(SOIL_ACTIVATOR_PIN, HIGH);
+  delay(1000);
   const float analogHumidity = analogRead(ANALOG_PIN);
   const float inverseHumidity = MAX_ANALOG_SOIL_HUMIDITY - analogHumidity;
   return (inverseHumidity * 100.0) / MAX_ANALOG_SOIL_HUMIDITY;
 }
 
-float PIPE::_getCurrentTemperature()
+float PIPE::_getTemperature()
 {
-//  return dhtSensorPtr->readTemperature();
-  return 32.2;
+  return dhtSensorPtr->readTemperature();
 }
 
-float PIPE::_getCurrentLight()
+float PIPE::_getLight()
 {
-  delay(200);
   digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, HIGH);
   digitalWrite(SOIL_ACTIVATOR_PIN, LOW);
+  delay(1000);
   const float analogLight = analogRead(ANALOG_PIN);
   return (analogLight * 100.0) / MAX_ANALOG_LIGHT;
-  return analogLight;
 }
 
 void PIPE::_onBulb()
