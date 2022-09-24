@@ -118,12 +118,8 @@ float PIPE::_getAirHumidity()
 
 float PIPE::_getSoilHumidity()
 {
-  digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, LOW);
-  digitalWrite(SOIL_ACTIVATOR_PIN, HIGH);
-  delay(100);
-  const float analogHumidity = analogRead(ANALOG_PIN);
+  const float analogHumidity = _readAnalog(true);
   const float inverseHumidity = MAX_ANALOG_SOIL_HUMIDITY - analogHumidity;
-  return analogHumidity;
   return (inverseHumidity * 100.0) / MAX_ANALOG_SOIL_HUMIDITY;
 }
 
@@ -135,9 +131,7 @@ float PIPE::_getTemperature()
 
 float PIPE::_getLight()
 {
-  digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, HIGH);
-  digitalWrite(SOIL_ACTIVATOR_PIN, LOW);
-  const float analogLight = analogRead(ANALOG_PIN);
+  const float analogLight = _readAnalog(false);
   return (analogLight * 100.0) / MAX_ANALOG_LIGHT;
 }
 
@@ -169,4 +163,22 @@ void PIPE::_onPump()
 void PIPE::_offPump()
 {
   digitalWrite(PUMP_PIN, LOW);
+}
+
+float PIPE::_readAnalog(bool isForSoilHumiditySensor) {
+  float value;
+  if (isForSoilHumiditySensor) {
+    digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, LOW);
+    digitalWrite(SOIL_ACTIVATOR_PIN, HIGH);
+    value = analogRead(ANALOG_PIN);
+    digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, HIGH);
+    digitalWrite(SOIL_ACTIVATOR_PIN, LOW);
+  } else {
+    digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, HIGH);
+    digitalWrite(SOIL_ACTIVATOR_PIN, LOW);
+    value = analogRead(ANALOG_PIN);
+    digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, LOW);
+    digitalWrite(SOIL_ACTIVATOR_PIN, HIGH);
+  }
+  return value;
 }

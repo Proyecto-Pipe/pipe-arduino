@@ -43,6 +43,8 @@ private:
 
   void _onPump();
   void _offPump();
+
+  float _readAnalog(bool isForSoilHumiditySensor);
 };
 
 #endif
