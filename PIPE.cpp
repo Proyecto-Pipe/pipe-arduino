@@ -112,6 +112,7 @@ void PIPE::debug()
 
 float PIPE::_getAirHumidity()
 {
+  return 0.0;
   return dhtSensorPtr->readHumidity();
 }
 
@@ -119,14 +120,16 @@ float PIPE::_getSoilHumidity()
 {
   digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, LOW);
   digitalWrite(SOIL_ACTIVATOR_PIN, HIGH);
-  delay(1000);
+  delay(100);
   const float analogHumidity = analogRead(ANALOG_PIN);
   const float inverseHumidity = MAX_ANALOG_SOIL_HUMIDITY - analogHumidity;
+  return analogHumidity;
   return (inverseHumidity * 100.0) / MAX_ANALOG_SOIL_HUMIDITY;
 }
 
 float PIPE::_getTemperature()
 {
+  return 0.0;
   return dhtSensorPtr->readTemperature();
 }
 
@@ -134,7 +137,6 @@ float PIPE::_getLight()
 {
   digitalWrite(PHOTORESISTOR_ACTIVATOR_PIN, HIGH);
   digitalWrite(SOIL_ACTIVATOR_PIN, LOW);
-  delay(1000);
   const float analogLight = analogRead(ANALOG_PIN);
   return (analogLight * 100.0) / MAX_ANALOG_LIGHT;
 }

@@ -33,7 +33,6 @@ void setup()
   DHT* dhtSensorPtr = &localDhtSensor;
   Serial.println(localDhtSensor.readHumidity());
   Serial.println(dhtSensorPtr->readHumidity());
-//  dhtSensorPtr->begin();
   PIPEInstance.setUp(dhtSensorPtr);
 //  PIPEInstance.update();
 
@@ -53,8 +52,8 @@ void setup()
 void loop()
 {
   delay(1000);
-   Serial.println(PIPEInstance._getAirHumidity());
-//  PIPEInstance.debug();
+  // Serial.println(PIPEInstance._getAirHumidity());
+  PIPEInstance.debug();
 
 //  PIPEInstance.offFan();
 //  delay(10000);
