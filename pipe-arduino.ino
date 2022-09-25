@@ -19,6 +19,8 @@
 // Millis()
 const int period = 10000;
 unsigned long time_now = 0;
+DHT* dhtSensorPtr;
+DHT localDhtSensor(DHT_PIN, DHT_TYPE);
 
 void setup()
 {
@@ -28,21 +30,10 @@ void setup()
 
   Screen::setUp();
 
-  DHT localDhtSensor(DHT_PIN, DHT_TYPE);
   localDhtSensor.begin();
-  DHT* dhtSensorPtr = &localDhtSensor;
-  Serial.println(localDhtSensor.readHumidity());
-  Serial.println(dhtSensorPtr->readHumidity());
+  dhtSensorPtr = &localDhtSensor;
   PIPEInstance.setUp(dhtSensorPtr);
-//  PIPEInstance.update();
-
-//  while (true) {
-//      Serial.println("Fafsa");
-//      Serial.println(localDhtSensor.readHumidity());
-//      Serial.println(dhtSensorPtr->readHumidity());
-//      Serial.println(PIPEInstance._getAirHumidity());
-//      delay(200);
-//  }
+  PIPEInstance.update();
 
   // initWifi();
   // getPipe();
@@ -51,12 +42,7 @@ void setup()
 
 void loop()
 {
-  delay(1000);
-  // Serial.println(PIPEInstance._getAirHumidity());
-  PIPEInstance.debug();
-
-//  PIPEInstance.offFan();
-//  delay(10000);
+  PIPEInstance.debugControls();
   // time_now = millis();
   //  while (millis() < time_now + period);
   //  Serial.println("\n\nF/loop: New period");

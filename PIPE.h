@@ -23,14 +23,14 @@ public:
   void activatePump();
 
   void setUp(DHT* dhtSensorPtr_);
-//  void setUp();
   void update();
   void debug();
-  float _getAirHumidity();
+  void debugControls();
+
 private:
   DHT* dhtSensorPtr;
 
-
+  float _getAirHumidity();
   float _getSoilHumidity();
   float _getTemperature();
   float _getLight();

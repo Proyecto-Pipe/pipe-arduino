@@ -110,9 +110,23 @@ void PIPE::debug()
   Serial.println(isPumpOn);
 }
 
+void PIPE::debugControls {
+  Serial.println("++++++++ Activating everyting");
+  PIPEInstance.onBulb();
+  PIPEInstance.onFan();
+  Serial.print("Delay.....");
+  delay(2000);
+  Serial.println("end");
+  PIPEInstance.offBulb();
+  PIPEInstance.offFan();
+  Serial.println("-------- Deactivating everything");
+  Serial.print("Delay....");
+  delay(2000);
+  Serial.println("end");
+}
+
 float PIPE::_getAirHumidity()
 {
-  return 0.0;
   return dhtSensorPtr->readHumidity();
 }
 
@@ -125,7 +139,6 @@ float PIPE::_getSoilHumidity()
 
 float PIPE::_getTemperature()
 {
-  return 0.0;
   return dhtSensorPtr->readTemperature();
 }
 

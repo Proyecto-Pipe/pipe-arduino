@@ -11,14 +11,14 @@
 // D0 (GPIO16), D3 (GPIO0), D4 (GPIO2), D8 (GPIO15), TX (GPIO1)
 #define FLASH_PIN D7
 
-#define DHT_PIN D3
+#define DHT_PIN D6
 #define DHT_TYPE DHT11
 
-#define BULB_PIN D7
+#define BULB_PIN D3
 
 #define FAN_PIN D0
 
-#define PUMP_PIN D2
+#define PUMP_PIN D1
 #define PUMP_DURATION 2000
 
 #define ANALOG_PIN A0
