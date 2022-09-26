@@ -8,6 +8,11 @@ class Screen
 {
 public:
   static void setUp();
+
+  const static int helloWorldCode = 0;
+  static void helloWorld();
+
+  static void yield(int code);
 };
 
 #endif

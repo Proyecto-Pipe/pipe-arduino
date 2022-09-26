@@ -42,6 +42,7 @@ void setup()
 
 void loop()
 {
+  Screen::yield(Screen::helloWorldCode);
   PIPEInstance.debugControls();
   // time_now = millis();
   //  while (millis() < time_now + period);

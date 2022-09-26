@@ -25,8 +25,8 @@
 #define PHOTORESISTOR_ACTIVATOR_PIN D2
 #define SOIL_ACTIVATOR_PIN D8
 
-#define DISPLAY_SDA D4 // Serial Data
-#define DISPLAY_SCL D5 // Serial Clock
+#define DISPLAY_SDA 2 // D4
+#define DISPLAY_SCL 14 // D5
 
 #define BUFFER_SIZE 174
 

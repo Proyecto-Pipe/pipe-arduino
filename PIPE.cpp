@@ -52,7 +52,6 @@ void PIPE::activatePump()
 }
 
 void PIPE::setUp(DHT *dhtSensorPtr_)
-//void PIPE::setUp()
 {
   Serial.println("C/Pipe: setUp");
   // DHT:
@@ -110,16 +109,17 @@ void PIPE::debug()
   Serial.println(isPumpOn);
 }
 
-void PIPE::debugControls {
-  Serial.println("++++++++ Activating everyting");
-  PIPEInstance.onBulb();
-  PIPEInstance.onFan();
+void PIPE::debugControls()
+{
+  onBulb();
+  onFan();
+  Serial.println("++++++++ Everyting activated");
   Serial.print("Delay.....");
   delay(2000);
   Serial.println("end");
-  PIPEInstance.offBulb();
-  PIPEInstance.offFan();
-  Serial.println("-------- Deactivating everything");
+  offBulb();
+  offFan();
+  Serial.println("-------- Everything deactivated");
   Serial.print("Delay....");
   delay(2000);
   Serial.println("end");
