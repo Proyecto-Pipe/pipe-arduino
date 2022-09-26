@@ -1,7 +1,7 @@
 #ifndef SETTINGS_H
 #define SETTINGS_H
 
-#define VERSION "1.0.4"
+#define VERSION "2.0.0"
 
 // Pins Order:
 // 16 5 4 0 2 3.3V GND
@@ -35,9 +35,6 @@
 const char URL[] = "http://pipe-server.herokuapp.com/v1/pipe";
 
 #define PORT 80
-#define API_PASSWORD "4141"
-
-#define WIFI_SSID "iPhone de ete sech"
-#define WIFI_PASSWORD "password"
+#define PERIOD_DURATION 1
 
 #endif

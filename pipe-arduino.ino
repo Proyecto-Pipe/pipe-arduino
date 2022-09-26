@@ -17,7 +17,6 @@
 #include "./settings.h"
 
 // Millis()
-const int period = 10000;
 unsigned long time_now = 0;
 DHT* dhtSensorPtr;
 DHT localDhtSensor(DHT_PIN, DHT_TYPE);
@@ -29,24 +28,27 @@ void setup()
   Serial.println(VERSION);
 
   Screen::setUp();
+  Screen::setUpMessage();
+  delay(1000);
 
   localDhtSensor.begin();
   dhtSensorPtr = &localDhtSensor;
   PIPEInstance.setUp(dhtSensorPtr);
   PIPEInstance.update();
 
-  // initWifi();
-  // getPipe();
-  // postPipe();
+  initWifi();
+  getPipe();
+  postPipe();
 }
 
 void loop()
 {
-  Screen::yield(Screen::helloWorldCode);
-  PIPEInstance.debugControls();
-  // time_now = millis();
-  //  while (millis() < time_now + period);
-  //  Serial.println("\n\nF/loop: New period");
-  //  getPipe();
-  //  postPipe();
+  time_now = millis();
+  while (millis() < time_now + PERIOD_DURATION);
+    Serial.println("\n\nF/loop: New period");
+    if (wifiConnected() == false) {
+      initWifi();
+    }
+    getPipe();
+    postPipe();
 }

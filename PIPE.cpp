@@ -111,6 +111,7 @@ void PIPE::debug()
 
 void PIPE::debugControls()
 {
+  Serial.println("C/Pipe: debugControls:");
   onBulb();
   onFan();
   Serial.println("++++++++ Everyting activated");

@@ -8,11 +8,11 @@ class Screen
 {
 public:
   static void setUp();
-
-  const static int helloWorldCode = 0;
+  
   static void helloWorld();
-
-  static void yield(int code);
+  static void setUpMessage();
+  static void searchingWifiMessage(int dots);
+  static void requestMessage(char verb[], bool done);
 };
 
 #endif
