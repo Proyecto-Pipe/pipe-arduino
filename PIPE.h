@@ -26,11 +26,11 @@ public:
   void update();
   void debug();
   void debugControls();
-
+  float _getAirHumidity();
 private:
   DHT* dhtSensorPtr;
 
-  float _getAirHumidity();
+
   float _getSoilHumidity();
   float _getTemperature();
   float _getLight();

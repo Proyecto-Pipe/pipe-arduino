@@ -56,7 +56,6 @@ void PIPE::setUp(DHT *dhtSensorPtr_)
   Serial.println("C/Pipe: setUp");
   // DHT:
   dhtSensorPtr = dhtSensorPtr_;
-  Serial.println(dhtSensorPtr->readHumidity());
 
   // Photoresistor and Soil:
   pinMode(ANALOG_PIN, INPUT);
@@ -128,7 +127,9 @@ void PIPE::debugControls()
 
 float PIPE::_getAirHumidity()
 {
-  return dhtSensorPtr->readHumidity();
+  delay(100);
+  float humidity = dhtSensorPtr->readHumidity();
+  return humidity;
 }
 
 float PIPE::_getSoilHumidity()
@@ -140,6 +141,7 @@ float PIPE::_getSoilHumidity()
 
 float PIPE::_getTemperature()
 {
+  delay(100);
   return dhtSensorPtr->readTemperature();
 }
 

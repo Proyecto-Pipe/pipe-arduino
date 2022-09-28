@@ -44,11 +44,13 @@ void setup()
 void loop()
 {
   time_now = millis();
-  while (millis() < time_now + PERIOD_DURATION);
+  if (millis() < time_now + PERIOD_DURATION) {
     Serial.println("\n\nF/loop: New period");
+    Serial.println(PIPEInstance._getAirHumidity());
     if (wifiConnected() == false) {
       initWifi();
     }
     getPipe();
     postPipe();
+  };
 }

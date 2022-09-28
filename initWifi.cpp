@@ -16,7 +16,7 @@ void initWifi()
   Serial.println("F/initWifi: Started");
   WiFi.mode(WIFI_STA);
   WiFi.begin(ssid, password);
-  Serial.print("F/initWifi: Connecting to WiFi ..");
+  Serial.print("F/initWifi: Connecting to Wifi ..");
   while (WiFi.status() != WL_CONNECTED)
   {
     Screen::searchingWifiMessage(dots);
