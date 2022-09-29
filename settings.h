@@ -19,7 +19,7 @@
 #define FAN_PIN D0
 
 #define PUMP_PIN D1
-#define PUMP_DURATION 2000
+#define PUMP_DURATION 1000
 
 #define ANALOG_PIN A0
 #define PHOTORESISTOR_ACTIVATOR_PIN D2
@@ -35,6 +35,6 @@
 const char URL[] = "http://pipe-server.herokuapp.com/v1/pipe";
 
 #define PORT 80
-#define PERIOD_DURATION 20
+#define PERIOD_DURATION 3000
 
 #endif

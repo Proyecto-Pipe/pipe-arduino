@@ -30,7 +30,7 @@ void getPipe()
   DynamicJsonDocument jsonRes(BUFFER_SIZE);
   deserializeJson(jsonRes, payload);
   const int isBulbOn = int(jsonRes["isBulbOn"]);
-  const int isFanOn = int(jsonRes["isBulbOn"]);
+  const int isFanOn = int(jsonRes["isFanOn"]);
   const int isPumpOn = int(jsonRes["isPumpOn"]);
 
   if (isBulbOn == 1)
