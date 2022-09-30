@@ -20,17 +20,18 @@ public:
   void offBulb();
   void onFan();
   void offFan();
-  void activatePump();
+  void onPump();
+  void offPump();
 
   void setUp(DHT* dhtSensorPtr_);
   void update();
   void debug();
   void debugControls();
-  float _getAirHumidity();
+
 private:
   DHT* dhtSensorPtr;
 
-
+  float _getAirHumidity();
   float _getSoilHumidity();
   float _getTemperature();
   float _getLight();

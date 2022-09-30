@@ -49,7 +49,9 @@ void getPipe()
   }
   if (isPumpOn == 1)
   {
-    PIPEInstance.activatePump();
+    PIPEInstance.onPump();
+  } else {
+    PIPEInstance.offPump();
   }
   Screen::requestMessage("GET", true);
   http.end();

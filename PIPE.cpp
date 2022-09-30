@@ -40,15 +40,18 @@ void PIPE::offFan()
   _offFan();
 }
 
-void PIPE::activatePump()
+void PIPE::onPump()
 {
-  Serial.println("C/Pipe: activatePump");
+  Serial.println("C/Pipe: onPump");
   isPumpOn = 1;
   _onPump();
-  delay(PUMP_DURATION);
-  _offPump();
+}
+
+void PIPE::offPump()
+{
+  Serial.println("C/Pipe: offPump");
   isPumpOn = 0;
-  Serial.println("C/Pipe: activatePump finished");
+  _offPump();
 }
 
 void PIPE::setUp(DHT *dhtSensorPtr_)
