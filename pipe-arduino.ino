@@ -15,6 +15,7 @@
 #include "./Request.h"
 #include "./Screen.h"
 #include "./settings.h"
+#include "./automation.h"
 
 // Millis()
 unsigned long time_now = 0;
@@ -51,5 +52,6 @@ void loop()
     }
     getPipe();
     postPipe();
+    automation();
   };
 }
