@@ -36,4 +36,6 @@ const char URL[] = "http://pipe-server.herokuapp.com/v1/pipe";
 #define PORT 80
 #define PERIOD_DURATION 3000
 
+#define MIN_PIPE_LIGHT 30.0
+
 #endif
