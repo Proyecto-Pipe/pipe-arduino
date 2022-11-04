@@ -173,12 +173,12 @@ void PIPE::_offFan()
 
 void PIPE::_onPump()
 {
-  digitalWrite(PUMP_PIN, HIGH);
+  digitalWrite(PUMP_PIN, LOW);
 }
 
 void PIPE::_offPump()
 {
-  digitalWrite(PUMP_PIN, LOW);
+  digitalWrite(PUMP_PIN, HIGH);
 }
 
 float PIPE::_readAnalog(bool isForSoilHumiditySensor) {
