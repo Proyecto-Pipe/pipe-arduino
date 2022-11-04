@@ -166,12 +166,12 @@ void PIPE::_offBulb()
 
 void PIPE::_onFan()
 {
-  digitalWrite(FAN_PIN, HIGH);
+  digitalWrite(FAN_PIN, LOW);
 }
 
 void PIPE::_offFan()
 {
-  digitalWrite(FAN_PIN, LOW);
+  digitalWrite(FAN_PIN, HIGH);
 }
 
 void PIPE::_onPump()

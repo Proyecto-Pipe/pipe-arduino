@@ -19,7 +19,6 @@
 #define FAN_PIN D0
 
 #define PUMP_PIN D1
-#define PUMP_DURATION 1000
 
 #define ANALOG_PIN A0
 #define PHOTORESISTOR_ACTIVATOR_PIN D2
