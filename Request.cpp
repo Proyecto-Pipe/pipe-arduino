@@ -6,6 +6,7 @@
 #include "./PIPEInstance.h"
 #include "./settings.h"
 #include "./env.h"
+#include "./startAutomation.h"
 
 #include <ESP8266WiFi.h>
 WiFiClient WifiClient;
@@ -29,29 +30,34 @@ void getPipe()
 
   DynamicJsonDocument jsonRes(BUFFER_SIZE);
   deserializeJson(jsonRes, payload);
-  const int isBulbOn = int(jsonRes["isBulbOn"]);
-  const int isFanOn = int(jsonRes["isFanOn"]);
-  const int isPumpOn = int(jsonRes["isPumpOn"]);
 
-  if (isBulbOn == 1)
-  {
-    PIPEInstance.onBulb();
-  }
-  else
-  {
-    PIPEInstance.offBulb();
-  }
-  if (isFanOn == 1)
-  {
-    PIPEInstance.onFan();
+  const int automation = int(jsonRes["automation"]);
+  if (automation == 1) {
+    startAutomation();
   } else {
-    PIPEInstance.offFan();
-  }
-  if (isPumpOn == 1)
-  {
-    PIPEInstance.onPump();
-  } else {
-    PIPEInstance.offPump();
+    const int isBulbOn = int(jsonRes["isBulbOn"]);
+    const int isFanOn = int(jsonRes["isFanOn"]);
+    const int isPumpOn = int(jsonRes["isPumpOn"]);
+    if (isBulbOn == 1)
+    {
+      PIPEInstance.onBulb();
+    }
+    else
+    {
+      PIPEInstance.offBulb();
+    }
+    if (isFanOn == 1)
+    {
+      PIPEInstance.onFan();
+    } else {
+      PIPEInstance.offFan();
+    }
+    if (isPumpOn == 1)
+    {
+      PIPEInstance.onPump();
+    } else {
+      PIPEInstance.offPump();
+    } 
   }
   Screen::requestMessage("GET", true);
   http.end();
