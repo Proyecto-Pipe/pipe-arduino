@@ -24,7 +24,7 @@
 #define PHOTORESISTOR_ACTIVATOR_PIN D2
 #define SOIL_ACTIVATOR_PIN D8
 
-#define DISPLAY_SDA 2 // D4
+#define DISPLAY_SDA 2  // D4
 #define DISPLAY_SCL 14 // D5
 
 #define BUFFER_SIZE 174
@@ -36,8 +36,8 @@ const char URL[] = "http://pipe-server.herokuapp.com/v1/pipe";
 #define PORT 80
 #define PERIOD_DURATION 3000
 
-#define MIN_PIPE_LIGHT 30.0
+#define MIN_PIPE_LIGHT 50.0
 #define MIN_PIPE_TEMPERATURE 30.0
-#define MIN_PIPE_HUMIDITY 30.0
+#define MIN_PIPE_HUMIDITY 10.0
 
 #endif
