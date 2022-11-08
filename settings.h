@@ -38,6 +38,6 @@ const char URL[] = "http://pipe-server.herokuapp.com/v1/pipe";
 
 #define MIN_PIPE_LIGHT 50.0
 #define MIN_PIPE_TEMPERATURE 30.0
-#define MIN_PIPE_HUMIDITY 10.0
+#define MIN_PIPE_HUMIDITY 15.0
 
 #endif
