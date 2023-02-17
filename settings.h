@@ -37,7 +37,7 @@ const char URL[] = "http://pipe-server.herokuapp.com/v1/pipe";
 #define PERIOD_DURATION 3000
 
 #define MIN_PIPE_LIGHT 50.0
-#define MIN_PIPE_TEMPERATURE 30.0
+#define MAX_PIPE_TEMPERATURE 28.0
 #define MIN_PIPE_HUMIDITY 15.0
 
 #endif

@@ -8,7 +8,7 @@ void startAutomation() {
   } else {
     PIPEInstance.offBulb();
   }
-  if (PIPEInstance.temperature <= MIN_PIPE_TEMPERATURE) {
+  if (PIPEInstance.temperature >= MAX_PIPE_TEMPERATURE) {
     PIPEInstance.onFan();
   } else {
     PIPEInstance.offFan();
