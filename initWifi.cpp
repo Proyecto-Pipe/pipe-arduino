@@ -24,6 +24,7 @@ void initWifi()
     dots < 4 ? dots += 1 : dots = 1;
     delay(1000);
   }
+  
   Serial.print("\nF/initWifi: Connected to wifi: ");
   ip = WiFi.localIP();
   Serial.println(ip);

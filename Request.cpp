@@ -2,6 +2,7 @@
 #include "./Screen.h"
 
 #include <ESP8266HTTPClient.h>
+#include <WiFiClientSecureBearSSL.h>
 #include <ArduinoJson.h>
 #include "./PIPEInstance.h"
 #include "./settings.h"

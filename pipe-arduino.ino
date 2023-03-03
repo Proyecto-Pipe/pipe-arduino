@@ -7,6 +7,7 @@
 
 // Dependencies:
 #include <DHT.h>
+#include <WiFiClientSecureBearSSL.h>
 
 // Modules:
 #include "./PIPEInstance.h"
@@ -43,6 +44,10 @@ void setup()
 
 void loop()
 {
+      std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+
+    // Ignore SSL certificate validation
+    client->setInsecure();
   time_now = millis();
   if (millis() < time_now + PERIOD_DURATION) {
     Serial.println("\n\nF/loop: New period");
