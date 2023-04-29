@@ -31,10 +31,14 @@
 
 #define SERIAL_BAUD_RATE 115200
 
-const char URL[] = "http://pipe-server.herokuapp.com/v1/pipe";
+const char RECORDS_URL[] = "http://pipe-server.herokuapp.com/v1/piperecords";
+const char PIPENOW_URL[] = "http://pipe-server.herokuapp.com/v1/pipenow";
+const char ISCLIENTONLINE_URL[] = "http://pipe-server.herokuapp.com/v1/isclientonline";
 
 #define PORT 80
-#define PERIOD_DURATION 60000 // In milliseconds
+#define ISCLIENTONLINE_PERIOD 10000 // In milliseconds
+#define PIPENOW_PERIOD 3000
+#define RECORD_PERIOD 60000
 
 #define MIN_PIPE_LIGHT 50.0
 #define MAX_PIPE_TEMPERATURE 28.0

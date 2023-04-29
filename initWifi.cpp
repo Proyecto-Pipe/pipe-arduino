@@ -31,7 +31,6 @@ void initWifi()
 }
 
 bool wifiConnected() {
-   Serial.println("F/checkWifiConnected");
    if (WiFi.status() == WL_CONNECTION_LOST || WiFi.status() == WL_DISCONNECTED) {
      return false;
    } else {

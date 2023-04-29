@@ -12,12 +12,38 @@
 #include <ESP8266WiFi.h>
 WiFiClient WifiClient;
 
+bool checkIsClientOnline()
+{
+  Serial.println("F/checkIsClientOnline: Started");
+  Screen::requestMessage("GET", false);
+  HTTPClient http;
+  http.begin(WifiClient, ISCLIENTONLINE_URL);
+  http.addHeader("Content-Type", "application/json");
+  http.addHeader("password", API_PASSWORD);
+  http.addHeader("is-pipe", "true");
+  int httpCode = http.GET();
+
+  String payload = http.getString();
+  Serial.print("F/getPipe: code ");
+  Serial.print(httpCode);
+  Serial.print("  payload: ");
+  Serial.println(payload);
+
+  DynamicJsonDocument jsonRes(BUFFER_SIZE);
+  deserializeJson(jsonRes, payload);
+
+  const int isClientOnline = int(jsonRes["isClientOnline"]);
+  Screen::requestMessage("GET", true);
+  http.end();
+  return isClientOnline;
+}
+
 void getPipe()
 {
   Serial.println("F/getPipe: Started");
   Screen::requestMessage("GET", false);
   HTTPClient http;
-  http.begin(WifiClient, URL);
+  http.begin(WifiClient, RECORDS_URL);
   http.addHeader("Content-Type", "application/json");
   http.addHeader("password", API_PASSWORD);
   http.addHeader("is-pipe", "true");
@@ -64,7 +90,7 @@ void getPipe()
   http.end();
 }
 
-void postPipe()
+void postPipe(bool createRecord)
 {
   Screen::requestMessage("POST", false);
   Serial.println("F/postPipe: Started");
@@ -77,7 +103,12 @@ void postPipe()
   Serial.println(bodyBuffer);
   
   HTTPClient http;
-  http.begin(WifiClient, URL);
+  if (createRecord) {
+    http.begin(WifiClient, RECORDS_URL);
+  } else {
+    http.begin(WifiClient, PIPENOW_URL);
+  }
+
   http.addHeader("Content-Type", "application/json");
   http.addHeader("password", API_PASSWORD);
   http.addHeader("is-pipe", "true");

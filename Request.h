@@ -2,6 +2,6 @@
 #define REQUEST_H
 
 void getPipe();
-void postPipe();
-
+void postPipe(bool createRecord);
+bool checkIsClientOnline();
 #endif

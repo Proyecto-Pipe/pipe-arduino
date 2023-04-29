@@ -18,7 +18,9 @@
 #include "./settings.h"
 
 // Millis()
-unsigned long time_now = 0;
+unsigned long time_isclientonline = 0;
+unsigned long time_pipenow = 0;
+unsigned long time_records = 0;
 DHT* dhtSensorPtr;
 DHT localDhtSensor(DHT_PIN, DHT_TYPE);
 
@@ -39,22 +41,34 @@ void setup()
 
   initWifi();
   getPipe();
-  postPipe();
+  postPipe(false);
 }
 
+bool isClientOnline = false;
 void loop()
 {
   // https://www.norwegiancreations.com/2017/09/arduino-tutorial-using-millis-instead-of-delay/
   std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
   // Ignore SSL certificate validation
   client->setInsecure();
-  if (millis() >= time_now + PERIOD_DURATION) {
-    time_now += PERIOD_DURATION;
-    Serial.println("\n\nF/loop: New period");
   if (wifiConnected() == false) {
     initWifi();
   }
-  getPipe();
-  postPipe();
+  if (millis() >= time_isclientonline + ISCLIENTONLINE_PERIOD) { // Clock for isclientonline
+    time_isclientonline += ISCLIENTONLINE_PERIOD;
+    Serial.println("\n\nF/loop: ISCLIENTONLINE_PERIOD");
+    isClientOnline = checkIsClientOnline();
+  };
+  if (isClientOnline && millis() >= time_pipenow + PIPENOW_PERIOD) { // Clock for pipenow
+    time_pipenow += PIPENOW_PERIOD;
+    Serial.println("\n\nF/loop: PIPENOW_PERIOD");
+    getPipe();
+    postPipe(false);
+  };
+  if (millis() >= time_records + RECORD_PERIOD) { // Clock for records
+    time_records += RECORD_PERIOD;
+    Serial.println("\n\nF/loop: RECORD_PERIOD");
+    getPipe();
+    postPipe(true);
   };
 }
