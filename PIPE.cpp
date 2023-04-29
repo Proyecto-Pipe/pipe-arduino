@@ -132,26 +132,30 @@ float PIPE::_getAirHumidity()
 {
   delay(100);
   float humidity = dhtSensorPtr->readHumidity();
-  return humidity;
+//  return humidity;
+  return 56.332332;
 }
 
 float PIPE::_getSoilHumidity()
 {
   const float analogHumidity = _readAnalog(true);
   const float inverseHumidity = MAX_ANALOG_SOIL_HUMIDITY - analogHumidity;
-  return (inverseHumidity * 100.0) / MAX_ANALOG_SOIL_HUMIDITY;
+//  return (inverseHumidity * 100.0) / MAX_ANALOG_SOIL_HUMIDITY;
+  return 36.32;
 }
 
 float PIPE::_getTemperature()
 {
   delay(100);
-  return dhtSensorPtr->readTemperature();
+//  return dhtSensorPtr->readTemperature();
+  return 22.542142;
 }
 
 float PIPE::_getLight()
 {
   const float analogLight = _readAnalog(false);
-  return (analogLight * 100.0) / MAX_ANALOG_LIGHT;
+//  return (analogLight * 100.0) / MAX_ANALOG_LIGHT;
+  return 70.32;
 }
 
 void PIPE::_onBulb()

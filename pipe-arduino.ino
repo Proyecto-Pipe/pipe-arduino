@@ -44,17 +44,17 @@ void setup()
 
 void loop()
 {
-      std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
-
-    // Ignore SSL certificate validation
-    client->setInsecure();
-  time_now = millis();
-  if (millis() < time_now + PERIOD_DURATION) {
+  // https://www.norwegiancreations.com/2017/09/arduino-tutorial-using-millis-instead-of-delay/
+  std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+  // Ignore SSL certificate validation
+  client->setInsecure();
+  if (millis() >= time_now + PERIOD_DURATION) {
+    time_now += PERIOD_DURATION;
     Serial.println("\n\nF/loop: New period");
-    if (wifiConnected() == false) {
-      initWifi();
-    }
-    getPipe();
-    postPipe();
+  if (wifiConnected() == false) {
+    initWifi();
+  }
+  getPipe();
+  postPipe();
   };
 }

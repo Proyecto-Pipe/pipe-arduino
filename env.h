@@ -3,7 +3,7 @@
 
 #define API_PASSWORD "3124315"
 
-#define WIFI_SSID "iPhone de ete sech"
-#define WIFI_PASSWORD "password"
+#define WIFI_SSID "iPhone de Walter White"
+#define WIFI_PASSWORD "crotolamo"
 
 #endif
