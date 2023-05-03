@@ -132,8 +132,7 @@ float PIPE::_getAirHumidity()
 {
   delay(100);
   float humidity = dhtSensorPtr->readHumidity();
-//  return humidity;
-  return 56.332332;
+  return humidity;
 }
 
 float PIPE::_getSoilHumidity()
