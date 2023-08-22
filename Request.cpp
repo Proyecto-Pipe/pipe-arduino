@@ -16,8 +16,13 @@ bool checkIsClientOnline()
 {
   Serial.println("F/checkIsClientOnline: Started");
   Screen::requestMessage("GET", false);
+
+  std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+  // Ignore SSL certificate validation
+  client->setInsecure();
+
   HTTPClient http;
-  http.begin(WifiClient, ISCLIENTONLINE_URL);
+  http.begin(*client, ISCLIENTONLINE_URL);
   http.addHeader("Content-Type", "application/json");
   http.addHeader("password", API_PASSWORD);
   http.addHeader("is-pipe", "true");
@@ -25,6 +30,7 @@ bool checkIsClientOnline()
 
   String payload = http.getString();
   Serial.print("F/getPipe: code ");
+  Serial.println(http.headers());
   Serial.print(httpCode);
   Serial.print("  payload: ");
   Serial.println(payload);
@@ -42,8 +48,12 @@ void getPipe()
 {
   Serial.println("F/getPipe: Started");
   Screen::requestMessage("GET", false);
+    std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+  // Ignore SSL certificate validation
+  client->setInsecure();
+
   HTTPClient http;
-  http.begin(WifiClient, RECORDS_URL);
+  http.begin(*client, RECORDS_URL);
   http.addHeader("Content-Type", "application/json");
   http.addHeader("password", API_PASSWORD);
   http.addHeader("is-pipe", "true");
@@ -51,6 +61,7 @@ void getPipe()
 
   String payload = http.getString();
   Serial.print("F/getPipe: code ");
+  Serial.println(http.headers());
   Serial.print(httpCode);
   Serial.print("  payload: ");
   Serial.println(payload);
@@ -102,11 +113,15 @@ void postPipe(bool createRecord)
   Serial.println("F/postPipe: Body:");
   Serial.println(bodyBuffer);
   
+  std::unique_ptr<BearSSL::WiFiClientSecure>client(new BearSSL::WiFiClientSecure);
+  // Ignore SSL certificate validation
+  client->setInsecure();
+
   HTTPClient http;
   if (createRecord) {
-    http.begin(WifiClient, RECORDS_URL);
+    http.begin(*client, RECORDS_URL);
   } else {
-    http.begin(WifiClient, PIPENOW_URL);
+    http.begin(*client, PIPENOW_URL);
   }
 
   http.addHeader("Content-Type", "application/json");
@@ -116,12 +131,16 @@ void postPipe(bool createRecord)
   if (httpCode > 0)
   {
     String payload = http.getString();
+    Serial.print("F/postPipe: code ");
+    Serial.println(httpCode);
     Serial.println("F/postPipe: response: " + payload);
+    Serial.println(http.headers());
   }
   else
   {
     Serial.println("F/postPipe: Error in http request");
     Serial.println(httpCode);
+    Serial.println(http.headers());
   }
   http.end();
   Screen::requestMessage("POST", true);
